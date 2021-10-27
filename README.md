@@ -18,3 +18,4 @@ A Raspberry-targetting image to use as *master* for both Kiwix Offspot and OLIP 
  - Custom/specified WiFi firmware
 - [Limited writes](https://github.com/RaspAP/raspap-tools/blob/main/raspian_min_write.sh) on root partition
 - Boot-time script to toggle features and configuration using a custom `/boot/config.json` file.
+- Captive portal *server* managed by Captive-portal APP via a socket
