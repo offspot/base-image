@@ -1,19 +1,14 @@
 ssh less fbset sudo psmisc strace ed ncdu crda
 console-setup keyboard-configuration debconf-utils parted unzip
-build-essential manpages-dev python bash-completion gdb pkg-config
-python-rpi.gpio v4l-utils
-python-gpiozero
+build-essential manpages-dev python3 python3-pip bash-completion gdb pkg-config
 python3-gpiozero
 avahi-daemon
-lua5.1
-luajit
 hardlink ca-certificates curl
 fake-hwclock nfs-common usbutils
 libraspberrypi-dev libraspberrypi-doc libfreetype6-dev
 dosfstools
 dphys-swapfile
 raspberrypi-sys-mods
-pi-bluetooth
 apt-listchanges
 usb-modeswitch
 libpam-chksshpwd
@@ -31,3 +26,5 @@ ntfs-3g
 pciutils
 rpi-eeprom
 raspinfo
+git
+vim
