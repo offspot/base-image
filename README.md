@@ -22,4 +22,6 @@ DEPLOY_ZIP="1"
 USE_QCOW2="0"
 ```
 
+More information : https://github.com/RPi-Distro/pi-gen#config
+
 Download image at : https://drop.bsf-intranet.org/2021-11-26-ideascube-lite.zip
