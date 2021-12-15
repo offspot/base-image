@@ -36,6 +36,7 @@ else
 fi
 systemctl enable regenerate_ssh_host_keys
 systemctl enable firstboot.service
+touch /opt/iam_a_master_device
 EOF
 
 if [ "${USE_QEMU}" = "1" ]; then
