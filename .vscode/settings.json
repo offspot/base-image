@@ -1,0 +1,7 @@
+{
+    "gitlab.repositories": {
+        "/home/florian/Documents/1_Coding/2_Projets/Raspi/base-image": {
+            "preferredRemoteName": "origin"
+        }
+    }
+}

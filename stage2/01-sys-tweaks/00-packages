@@ -1,7 +1,7 @@
 ssh less fbset sudo psmisc strace ed ncdu crda
-console-setup keyboard-configuration debconf-utils parted unzip
+console-setup keyboard-configuration debconf-utils parted
 build-essential manpages-dev python3 python3-pip bash-completion gdb pkg-config
-python3-gpiozero
+v4l-utils
 avahi-daemon
 hardlink ca-certificates curl
 fake-hwclock nfs-common usbutils
@@ -28,3 +28,7 @@ rpi-eeprom
 raspinfo
 git
 vim
+lua5.1
+luajit
+udisks2
+unzip zip p7zip-full
