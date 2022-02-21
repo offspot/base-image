@@ -63,9 +63,6 @@ usermod --pass='*' root
 EOF
 
 on_chroot << EOF
-update-alternatives --install /usr/bin/python python /usr/bin/python2.7 1
-update-alternatives --install /usr/bin/python python /usr/bin/python3.7 2
-update-alternatives --install /usr/bin/pip pip /usr/bin/pip3 1
 pip3 install ansible==2.9.27
 EOF
 
