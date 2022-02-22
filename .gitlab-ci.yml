@@ -6,7 +6,6 @@ variables:
   DOCKER_HOST: tcp://127.0.0.1:2376
   DOCKER_TLS_VERIFY: 1
   DOCKER_CERT_PATH: "${DOCKER_TLS_CERTDIR}/client"
-  DOCKER_VERSION: 20.10.7
 
 stages:
   - build
@@ -15,12 +14,18 @@ olip-base-image:
   stage: build
   tags:
     - k8s
-  image: docker:${DOCKER_VERSION}
-  services:
-    - name: docker:${DOCKER_VERSION}-dind
-      command: ["--experimental"]
+  image: debian:buster
+  before_script:
+    - apt-get install coreutils quilt parted qemu-user-static debootstrap zerofree zip \
+      dosfstools libarchive-tools libcap2-bin grep rsync xz-utils file git curl bc \
+      qemu-utils kpartx gpg
+    - echo "IMG_NAME=ideascube-$CI_COMMIT_BRANCH" >> config
   script:
-    - ./build-docker.sh
+    - ./build.sh -c config
   artifacts:
     paths:
       - deploy/*.zip
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    - if: $CI_COMMIT_BRANCH != $CI_DEFAULT_BRANCH && $CI_COMMIT_BRANCH != "develop"
+    - if: $CI_COMMIT_BRANCH == "develop"
