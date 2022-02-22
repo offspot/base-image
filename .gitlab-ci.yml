@@ -16,16 +16,21 @@ olip-base-image:
     - k8s
   image: debian:buster
   before_script:
-    - apt-get install coreutils quilt parted qemu-user-static debootstrap zerofree zip \
-      dosfstools libarchive-tools libcap2-bin grep rsync xz-utils file git curl bc \
-      qemu-utils kpartx gpg
-    - echo "IMG_NAME=ideascube-$CI_COMMIT_BRANCH" >> config
+    - apt-get update
+    - apt-get install -y coreutils quilt parted qemu-user-static debootstrap zerofree zip dosfstools libarchive-tools libcap2-bin grep rsync xz-utils file git curl bc qemu-utils kpartx gpg xxd kmod
+    - echo "IMG_NAME=ideascube-$CI_COMMIT_BRANCH" >> ./config
   script:
-    - ./build.sh -c config
+    - ./build.sh
   artifacts:
     paths:
       - deploy/*.zip
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+      variables:
+        BUILD_VERSION: latest
     - if: $CI_COMMIT_BRANCH != $CI_DEFAULT_BRANCH && $CI_COMMIT_BRANCH != "develop"
+      variables:
+        BUILD_VERSION: testing
     - if: $CI_COMMIT_BRANCH == "develop"
+      variables:
+        BUILD_VERSION: develop
