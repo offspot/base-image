@@ -7,3 +7,4 @@ TIMEZONE_DEFAULT="Europe/Paris"
 TARGET_HOSTNAME="ideascube"
 DEPLOY_ZIP="1"
 USE_QCOW2="0"
+IMG_NAME=ideascube
