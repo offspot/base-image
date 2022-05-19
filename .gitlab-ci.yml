@@ -14,7 +14,7 @@ olip-base-image:
   stage: build
   tags:
     - k8s
-  image: ubuntu:xenial
+  image: debian:buster
   before_script:
     - apt-get update
     - apt-get install -y coreutils quilt parted qemu-user-static debootstrap zerofree zip dosfstools libarchive-tools libcap2-bin grep rsync xz-utils file git curl bc qemu-utils kpartx gpg xxd kmod
