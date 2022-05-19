@@ -41,6 +41,7 @@ fi
 systemctl enable regenerate_ssh_host_keys
 systemctl enable firstboot.service
 touch /opt/iam_a_master_device
+cp -f /home/${FIRST_USER_NAME}/.bashrc /root/.bashrc
 EOF
 
 if [ "${USE_QEMU}" = "1" ]; then
