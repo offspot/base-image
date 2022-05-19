@@ -29,6 +29,10 @@ on_chroot << EOF
 systemctl disable hwclock.sh
 systemctl disable nfs-common
 systemctl disable rpcbind
+systemctl unmask bootlogd.service
+systemctl disable bootlogs
+systemctl disable console-setup
+systemctl disable apt-daily.service apt-daily.timer apt-daily-upgrade.timer apt-daily-upgrade.service
 if [ "${ENABLE_SSH}" == "1" ]; then
 	systemctl enable ssh
 else

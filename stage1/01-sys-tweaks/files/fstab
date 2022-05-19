@@ -2,3 +2,9 @@ proc            /proc           proc    defaults          0       0
 BOOTDEV  /boot           vfat    defaults          0       2
 ROOTDEV  /               ext4    defaults,noatime  0       1
 DATADEV  /data           ext4    defaults,noatime  0       1
+tmpfs    /tmp            tmpfs   nosuid,nodev 0 0
+tmpfs    /var/log        tmpfs   nosuid,nodev 0 0
+tmpfs    /var/tmp        tmpfs   nosuid,nodev 0 0
+tmpfs    /var/lib/misc   tmpfs   nosuid,nodev 0 0
+tmpfs    /var/cache      tmpfs   nosuid,nodev 0 0
+tmpfs    /var/lib/vnstat tmpfs   nosuid,nodev 0 0
