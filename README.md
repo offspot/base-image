@@ -24,4 +24,6 @@ USE_QCOW2="0"
 
 More information : https://github.com/RPi-Distro/pi-gen#config
 
-Download image at : https://drop.bsf-intranet.org/image_2021-12-15-ideascube-lite.zip
+Download image at : 
+* Old stable : https://drop.bsf-intranet.org/image_2021-12-15-ideascube-lite.zip
+* Last update : https://drop.bsf-intranet.org/image_2022-05-19-ideascube-lite.zip
