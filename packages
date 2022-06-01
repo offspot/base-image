@@ -1,0 +1,7 @@
+# list the packages you want to add on lines starting with a `+`
+# and the ones you want to remove on lines starting with a `-`
+# comment and empty lines are omitted ; lines and package names are stripped
++ bash-completion
++ git
++ vim
++ screen
