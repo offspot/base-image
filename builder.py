@@ -84,7 +84,7 @@ class Builder:
 
     def download_pigen(self):
         """clone requested version of Pi-gen"""
-        if self.conf.build_dir.exists():
+        if self.conf.build_dir.exists() and list(self.conf.build_dir.iterdir()):
             logger.warning(f"build-dir exists. reusing ({self.conf.build_dir}")
             return
         logger.info("Cloning Pi-gen")
