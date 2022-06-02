@@ -22,3 +22,15 @@ A Raspberry-targetting image to use as *master* for both Kiwix Offspot and OLIP 
 - [Limited writes](https://github.com/RaspAP/raspap-tools/blob/main/raspian_min_write.sh) on root partition
 - Boot-time script to toggle features and configuration using a custom `/boot/config.json` file.
 - Captive portal *server* managed by Captive-portal APP via a socket
+
+## Troubleshooting
+
+If you have a problem during the base image creation; check first if
+help is already available at [pi-gen](https://github.com/RPi-Distro/pi-gen):
+- Read [pi-gen' README](https://github.com/RPi-Distro/pi-gen/blob/master/README.md#troubleshooting)
+up to then end.
+- Search in the [pi-gen known issues](https://github.com/RPi-Distro/pi-gen/issues?q=is%3Aissue+).
+
+If you are still stuck, then [open a
+ticket](https://github.com/offspot/base-image/issues) in our bug
+tracker.
