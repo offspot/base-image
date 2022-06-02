@@ -2,6 +2,9 @@
 
 A Raspberry-targetting image to use as *master* for both Kiwix Offspot and OLIP through the use of [`image-creator`](https://github.com/offspot/image-creator).
 
+[![CodeFactor](https://www.codefactor.io/repository/github/offspot/base-image/badge)](https://www.codefactor.io/repository/github/offspot/base-image)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+
 ## Scope
 
 - Based off [RaspiOS Lite](https://www.raspberrypi.com/software/).
