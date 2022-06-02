@@ -114,7 +114,7 @@ class Builder:
             if fpath.suffix == ".patch":
                 dest = dest.with_name(re.sub(r".patch$", "", dest.name))
                 logger.debug(f"patching {dest}")
-                subprocess.run(["patch", dest, fpath], check=True)
+                subprocess.run(["/usr/bin/env", "patch", dest, fpath], check=True)
             else:
                 logger.debug(f"copying {relpath}")
                 shutil.copyfile(fpath, dest, follow_symlinks=True)
@@ -171,10 +171,10 @@ class Builder:
 
     def cleanup(self):
         if not subprocess.run(
-            ["docker", "inspect", CONTAINER_NAME], capture_output=True
+            ["/usr/bin/env", "docker", "inspect", CONTAINER_NAME], capture_output=True
         ).returncode:
             logger.debug(f"Removing existing container {CONTAINER_NAME}")
-            subprocess.run(["docker", "rm", "-v", "-f", CONTAINER_NAME])
+            subprocess.run(["/usr/bin/env", "docker", "rm", "-v", "-f", CONTAINER_NAME])
 
         # remove build-dir (pigen clone)
         if self.conf.build_dir.exists() and not self.conf.keep_build_dir:
