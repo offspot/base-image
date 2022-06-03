@@ -30,6 +30,7 @@ def run(*args, **kwargs):
 class Defaults:
     pigen_version: str = "2022-04-04-raspios-bullseye"
     build_64b: bool = False
+    compress: bool = False
     dont_use_docker: bool = False
 
     src_dir: pathlib.Path = pathlib.Path(__file__).parent
@@ -38,8 +39,8 @@ class Defaults:
     build_dir: pathlib.Path = None
     keep_build_dir: bool = False
 
-    _output_dir: str = "."
-    output_dir: pathlib.Path = None
+    _output: str = ""
+    output: pathlib.Path = None
 
     IMG_NAME: str = "offspot-base"
     LOCALE_DEFAULT: str = "en_US.UTF-8"
@@ -55,8 +56,13 @@ class Defaults:
     STAGE_LIST: str = "stage0 stage1 stage2"
 
     def __post_init__(self):
-        self.output_dir = pathlib.Path(self._output_dir)
-        self.build_dir = pathlib.Path(self._build_dir)
+        self.output = (
+            pathlib.Path(self._output.strip() or f"./{self.IMG_NAME}.img")
+            .expanduser()
+            .resolve()
+            .with_suffix(".img")  # make sure we request filename ending in .img
+        )
+        self.build_dir = pathlib.Path(self._build_dir).expanduser().resolve()
 
     @classmethod
     def pigen_vars(cls) -> List[str]:
@@ -76,6 +82,16 @@ class Builder:
         self.conf = conf
 
     def run(self):
+        # stop builder right away if target file already exists
+        if self.conf.output.exists():
+            logger.error(f"{self.conf.output} already exists.")
+            return 1
+        if self.conf.compress:
+            xz_fpath = self.conf.output.with_name(f"{self.conf.output.name}.xz")
+        if xz_fpath.exists():
+            logger.error(f"{xz_fpath} already exists.")
+            return 1
+
         self.download_pigen()
         self.merge_tree()
         self.write_config()
@@ -128,6 +144,11 @@ class Builder:
                 if value is not None:
                     fh.write(f'{key}="{value}"\n')
             fh.write(f"APT_ARCH=\"arm{'64' if self.conf.build_64b else 'hf'}\"\n")
+            # disable default (zip) compression
+            fh.write("DEPLOY_COMPRESSION=none\n")
+
+            fh.write(f"IMG_FILENAME={self.conf.output.stem}\n")
+            fh.write(f"ARCHIVE_FILENAME={self.conf.output.stem}\n")
 
     def update_packages(self):
         """rewrites stage2's packages file to add or remove those we requested to"""
@@ -160,6 +181,27 @@ class Builder:
             self.build_docker()
         else:
             self.build_nodocker()
+        logger.info(f"Moving built image into final location {self.conf.output.parent}")
+        built_img = self.conf.build_dir / "deploy" / self.conf.output.stem
+        shutil.move(built_img.with_suffix(".img"), self.conf.output)
+        shutil.move(
+            built_img.with_suffix(".info"), self.conf.output.with_suffix(".info")
+        )
+        if self.conf.compress:
+            logger.info("Compressing image file…")
+            subprocess.run(
+                [
+                    "/usr/bin/env",
+                    "xz",
+                    "--compress",
+                    "--force",
+                    "--threads",
+                    "0",
+                    "-6",
+                    self.conf.output,
+                ]
+            )
+        subprocess.run(["/usr/bin/env", "ls", "-lh", self.conf.output.parent])
 
     def build_nodocker(self):
         logger.info("Starting build")
@@ -189,9 +231,10 @@ def main():
 
     parser.add_argument(
         "--output",
-        help="Output folder for image file",
-        default=Defaults._output_dir,
-        dest="_output_dir",
+        help="Output path and filename for image. "
+        "Defaults to <img-name>.img (--img-name ) in current working directory. "
+        "Normalized to use a `.img` suffix",
+        dest="_output",
     )
 
     parser.add_argument(
@@ -228,8 +271,18 @@ def main():
     )
 
     parser.add_argument(
+        "--compress",
+        help="Compress output image using XZ at end of process. "
+        "Compressed image will be output filename appended with `.xz`. "
+        "Uncompressed image will be removed",
+        default=Defaults.compress,
+        dest="compress",
+        action="store_true",
+    )
+
+    parser.add_argument(
         "--keep",
-        help="[dev] Keep build Directory",
+        help="[dev] Keep build directory",
         default=Defaults.keep_build_dir,
         dest="keep_build_dir",
         action="store_true",
