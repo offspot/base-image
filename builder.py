@@ -29,7 +29,7 @@ def run(*args, **kwargs):
 @dataclass
 class Defaults:
     pigen_version: str = "2022-04-04-raspios-bullseye"
-    build_64b: bool = False
+    arch: str = "armhf"
     compress: bool = False
     dont_use_docker: bool = False
 
@@ -63,6 +63,10 @@ class Defaults:
             .with_suffix(".img")  # make sure we request filename ending in .img
         )
         self.build_dir = pathlib.Path(self._build_dir).expanduser().resolve()
+
+    @property
+    def build_64b(self):
+        return self.arch == "arm64"
 
     @classmethod
     def pigen_vars(cls) -> List[str]:
@@ -143,7 +147,7 @@ class Builder:
                 value = getattr(self.conf, key)
                 if value is not None:
                     fh.write(f'{key}="{value}"\n')
-            fh.write(f"APT_ARCH=\"arm{'64' if self.conf.build_64b else 'hf'}\"\n")
+            fh.write(f'APT_ARCH="{self.conf.arch}"\n')
             # disable default (zip) compression
             fh.write("DEPLOY_COMPRESSION=none\n")
 
@@ -238,11 +242,11 @@ def main():
     )
 
     parser.add_argument(
-        "--64b",
-        help="Build a 64b image. Uses Pi-gen's arm64 branch.",
-        default=Defaults.build_64b,
-        dest="build_64b",
-        action="store_true",
+        "--arch",
+        help=f"Architecture to build image for. Defaults to {Defaults.arch}",
+        default=Defaults.arch,
+        choices=["armhf", "arm64"],
+        dest="arch",
     )
 
     parser.add_argument(
