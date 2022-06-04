@@ -57,7 +57,7 @@ class Defaults:
 
     def __post_init__(self):
         self.output = (
-            pathlib.Path(self._output.strip() or f"./{self.IMG_NAME}.img")
+            pathlib.Path(self._output or f"./{self.IMG_NAME}.img")
             .expanduser()
             .resolve()
             .with_suffix(".img")  # make sure we request filename ending in .img
