@@ -88,9 +88,9 @@ class Builder:
             return 1
         if self.conf.compress:
             xz_fpath = self.conf.output.with_name(f"{self.conf.output.name}.xz")
-        if xz_fpath.exists():
-            logger.error(f"{xz_fpath} already exists.")
-            return 1
+            if xz_fpath.exists():
+                logger.error(f"{xz_fpath} already exists.")
+                return 1
 
         self.download_pigen()
         self.merge_tree()
