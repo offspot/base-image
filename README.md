@@ -4,6 +4,7 @@ A Raspberry-targetting image to use as *master* for both Kiwix Offspot and OLIP 
 
 [![release](https://img.shields.io/github/v/tag/offspot/base-image?label=latest%20release&sort=semver)](https://drive.offspot.it/base/)
 [![CodeFactor](https://www.codefactor.io/repository/github/offspot/base-image/badge)](https://www.codefactor.io/repository/github/offspot/base-image)
+[![Build Status](https://github.com/offspot/base-image/actions/workflows/build-and-upload.yml/badge.svg?branch=main)](https://github.com/offspot/base-image/actions/workflows/build-and-upload.yml?query=branch%3Amain)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
 ## Scope
