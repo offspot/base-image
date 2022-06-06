@@ -63,6 +63,6 @@ jobs:
           echo "Uploading ${{ matrix.arch }} image ${{ env.BASE_IMAGE_FILENAME }} & info to WebDAV..."
           curl -u "${{ secrets.DRIVE_CREDENTIALS }}" -T "${{ env.BASE_IMAGE_FILENAME }}" -sw '%{http_code}' "https://drive.offspot.it/_webdav/base/${{ env.BASE_IMAGE_FILENAME }}"
           curl -u "${{ secrets.DRIVE_CREDENTIALS }}" -T "${{ env.BASE_IMAGE_INFO_FILENAME }}" -sw '%{http_code}' "https://drive.offspot.it/_webdav/base/${{ env.BASE_IMAGE_INFO_FILENAME }}"
-          echo "### ${{ matrix.arch }} artefacts" >> $GITHUB_STEP_SUMMARY
+          echo "### Artefacts" >> $GITHUB_STEP_SUMMARY
           echo "- [${{ env.BASE_IMAGE_FILENAME }}](https://drive.offspot.it/base/${{ env.BASE_IMAGE_FILENAME }})" >> $GITHUB_STEP_SUMMARY
           echo "- [${{ env.BASE_IMAGE_INFO_FILENAME }}](https://drive.offspot.it/base/${{ env.BASE_IMAGE_INFO_FILENAME }})" >> $GITHUB_STEP_SUMMARY
