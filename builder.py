@@ -139,7 +139,8 @@ class Builder:
                 subprocess.run(["/usr/bin/env", "patch", dest, fpath], check=True)
             else:
                 logger.debug(f"copying {relpath}")
-                shutil.copyfile(fpath, dest, follow_symlinks=True)
+                dest.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copy2(fpath, dest, follow_symlinks=True)
 
     def write_config(self):
         """save main pi-gen config from our defaults and passed values"""
