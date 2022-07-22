@@ -1,0 +1,9 @@
+--- pigen/stage0/prerun.sh	2022-05-25 11:45:18.000000000 +0000
++++ tree/stage0/prerun.sh	2022-05-26 09:44:12.000000000 +0000
+@@ -1,5 +1,5 @@
+ #!/bin/bash -e
+ 
+ if [ ! -d "${ROOTFS_DIR}" ] || [ "${USE_QCOW2}" = "1" ]; then
+-	bootstrap ${RELEASE} "${ROOTFS_DIR}" http://raspbian.raspberrypi.org/raspbian/
++	bootstrap ${RELEASE} "${ROOTFS_DIR}" http://mirrors.ircam.fr/pub/raspbian/raspbian/
+ fi
