@@ -109,9 +109,13 @@ if [ "${NO_PRERUN_QCOW2}" = "0" ]; then
     mkdir -p "${ROOTFS_DIR}/boot"
     mount -v "$BOOT_DEV" "${ROOTFS_DIR}/boot" -t vfat
     mkdir -p "${ROOTFS_DIR}/data"
-    
     mount.exfat-fuse "$DATA_DEV" "${ROOTFS_DIR}/data"
     touch "${ROOTFS_DIR}/data/master_fs"
+
+    # create images placeholder for docker
+    mkdir -p "${ROOTFS_DIR}/data/images"
+    # add base httpd server allowing docker stack tests
+    wget -O "${ROOTFS_DIR}/data/images/base-httpd-1.0.tar" https://drive.offspot.it/base/base-httpd-1.0.tar
 
     # create docker filesystem
     mkdir -p ${ROOTFS_DIR}/data/docker
