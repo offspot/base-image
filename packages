@@ -5,3 +5,6 @@
 + git
 + vim
 + screen
+
+# exfat support (mkfs, fsck)
++ exfatprogs
