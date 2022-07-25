@@ -162,6 +162,7 @@ mount /boot
 mount / -o remount,ro
 mount /data -o ro
 
+# remove itself from boot, regardless of whether we're resizing or not
 sed -i 's| init=/usr/sbin/offspot_bi_init_resize\.sh||' /boot/cmdline.txt
 sed -i 's| sdhci\.debug_quirks2=4||' /boot/cmdline.txt
 
@@ -170,6 +171,11 @@ if ! grep -q splash /boot/cmdline.txt; then
 fi
 sync
 mount /boot -o remount,ro
+
+# skip resizing process if not on a declared master fs
+if [ ! -f /data/master_fs ] ; then
+    reboot_pi
+fi
 
 if ! check_commands; then
   reboot_pi
