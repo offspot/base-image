@@ -15,6 +15,8 @@ EOF
 # install the image loading service
 install -m 755 files/docker-images-loader.py "${ROOTFS_DIR}/usr/sbin/"
 install -m 777 files/docker-images-loader.service "${ROOTFS_DIR}/etc/systemd/system/"
+# install docker compose stub and service
+install -m 755 files/compose.yml "${ROOTFS_DIR}/etc/docker/"
 install -m 777 files/docker-compose.service "${ROOTFS_DIR}/etc/systemd/system/"
 
 on_chroot << EOF

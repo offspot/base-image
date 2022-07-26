@@ -1,5 +1,6 @@
 [Unit]
 Description=Load docker images
+BindsTo=docker.service
 After=docker.service
 
 [Service]
