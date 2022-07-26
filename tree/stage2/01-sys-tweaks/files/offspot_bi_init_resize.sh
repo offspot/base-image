@@ -127,7 +127,7 @@ main () {
   # dump /data content (should not be large) into /tmp
   mount / -o remount,rw
   mount /data -o remount,ro
-  tar -c -f /mnt/data_part.tar --exclude "/data/master_fs" /data
+  tar -c -f /mnt/data_part.tar --exclude "/data/master_fs" --exclude "/data/.fseventsd" --exclude "/data/.Spotlight-V100" /data
   sync
   umount /data
 
