@@ -32,6 +32,7 @@ class Defaults:
     arch: str = "armhf"
     compress: bool = False
     dont_use_docker: bool = False
+    docker_fs_size: str = "100MB"
 
     src_dir: pathlib.Path = pathlib.Path(__file__).parent
 
@@ -46,7 +47,7 @@ class Defaults:
     LOCALE_DEFAULT: str = "en_US.UTF-8"
     TARGET_HOSTNAME: str = "offspot-base"
     KEYBOARD_KEYMAP: str = "us"
-    KEYBOARD_LAYOUT = "English (US)"
+    KEYBOARD_LAYOUT: str = "English (US)"
     TIMEZONE_DEFAULT: str = "UTC"
     FIRST_USER_NAME: str = "user"
     FIRST_USER_PASS: str = "raspberry"
@@ -100,6 +101,7 @@ class Builder:
         self.merge_tree()
         self.write_config()
         self.update_packages()
+        self.apply_fixes()
         self.build()
 
     def download_pigen(self):
@@ -153,6 +155,7 @@ class Builder:
 
             fh.write(f"IMG_FILENAME={self.conf.output.stem}\n")
             fh.write(f"ARCHIVE_FILENAME={self.conf.output.stem}\n")
+            fh.write("DISABLE_FIRST_BOOT_USER_RENAME=1\n")
 
     def update_packages(self):
         """rewrites stage2's packages file to add or remove those we requested to"""
@@ -179,6 +182,15 @@ class Builder:
 
         with open(fpath, "w") as fh:
             fh.write("\n".join(packages))
+
+    def apply_fixes(self):
+        """Code/env driven fixes to files"""
+        logger.info("Applying fixes")
+        export_prerun_sh = self.conf.build_dir / "export-image" / "prerun.sh"
+        with open(export_prerun_sh, "r") as fh:
+            content = fh.read()
+        with open(export_prerun_sh, "w") as fh:
+            fh.write(content.replace("DOCKER_FS_SIZE", self.conf.docker_fs_size))
 
     def build(self):
         if self.conf.use_docker:
@@ -254,6 +266,14 @@ def main():
         help="Don't use docker to build. Additional depenendencies required",
         default=Defaults.dont_use_docker,
         dest="dont_use_docker",
+        action="store_true",
+    )
+
+    parser.add_argument(
+        "--docker-fs-size",
+        help="Size of docker.fs virtual fs located in a file on /data",
+        default=Defaults.docker_fs_size,
+        dest="docker_fs_size",
         action="store_true",
     )
 

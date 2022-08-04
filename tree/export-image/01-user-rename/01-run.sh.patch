@@ -1,0 +1,9 @@
+--- tree.orig/export-image/01-user-rename/01-run.sh	2022-05-31 10:21:03.000000000 +0000
++++ tree/export-image/01-user-rename/01-run.sh	2022-07-08 15:58:12.000000000 +0000
+@@ -1,5 +1,3 @@
+ #!/bin/bash -e
+ 
+-on_chroot << EOF
+-	SUDO_USER="${FIRST_USER_NAME}" rename-user -f -s
+-EOF
++
