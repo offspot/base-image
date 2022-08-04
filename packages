@@ -8,3 +8,6 @@
 
 # exfat support (mkfs, fsck)
 + exfatprogs
+
+# using docker instead of balena or podman
++ docker-ce docker-ce-cli containerd.io docker-compose-plugin

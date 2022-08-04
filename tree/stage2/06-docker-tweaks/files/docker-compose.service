@@ -1,0 +1,11 @@
+[Unit]
+Description=Docker compose service
+BindsTo=docker.service
+After=docker-images-loader.service
+
+[Service]
+ExecStart=/usr/bin/docker compose -f /etc/docker/compose.yml up --remove-orphans
+ExecStop=/usr/bin/docker compose -f /etc/docker/compose.yml down
+
+[Install]
+WantedBy=multi-user.target

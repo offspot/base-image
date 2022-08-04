@@ -5,4 +5,4 @@
  BOOTDEV  /boot           vfat    defaults,flush    0       2
  ROOTDEV  /               ext4    defaults,noatime  0       1
 +DATADEV  /data           exfat   umask=0002,uid=1000,gid=33,x-systemd.device-timeout=3min  0       0
-+/data/docker.fs /data/docker    ext4    defaults,noatime,x-systemd.requires=/data       0       0
++/data/virtual.fs /data/virtual    ext4    defaults,noatime,x-systemd.requires=/data       0       0

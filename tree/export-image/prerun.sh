@@ -109,14 +109,18 @@ if [ "${NO_PRERUN_QCOW2}" = "0" ]; then
     mkdir -p "${ROOTFS_DIR}/boot"
     mount -v "$BOOT_DEV" "${ROOTFS_DIR}/boot" -t vfat
     mkdir -p "${ROOTFS_DIR}/data"
-    
     mount.exfat-fuse "$DATA_DEV" "${ROOTFS_DIR}/data"
     touch "${ROOTFS_DIR}/data/master_fs"
 
-    # create docker filesystem
-    mkdir -p ${ROOTFS_DIR}/data/docker
-    dd if=/dev/zero of=${ROOTFS_DIR}/data/docker.fs bs=DOCKER_FS_SIZE count=1
-    mkfs.ext4 -L docker ${ROOTFS_DIR}/data/docker.fs
+    # create images placeholder for docker
+    mkdir -p "${ROOTFS_DIR}/data/images"
+    # add base httpd server allowing docker stack tests
+    wget -O "${ROOTFS_DIR}/data/images/base-httpd-1.0.tar" https://drive.offspot.it/base/base-httpd-1.0.tar
+
+    # create virtual filesystem
+    mkdir -p ${ROOTFS_DIR}/data/virtual
+    dd if=/dev/zero of=${ROOTFS_DIR}/data/virtual.fs bs=VIRTUAL_FS_SIZE count=1
+    mkfs.ext4 -L virtual ${ROOTFS_DIR}/data/virtual.fs
 
     rsync -aHAXx --exclude /var/cache/apt/archives --exclude /boot "${EXPORT_ROOTFS_DIR}/" "${ROOTFS_DIR}/"
     rsync -rtx "${EXPORT_ROOTFS_DIR}/boot/" "${ROOTFS_DIR}/boot/"

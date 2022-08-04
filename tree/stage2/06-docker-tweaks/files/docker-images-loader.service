@@ -1,0 +1,13 @@
+[Unit]
+Description=Load docker images
+BindsTo=docker.service
+After=docker.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/sbin/docker-images-loader.py
+RemainAfterExit=true
+StandardOutput=journal
+
+[Install]
+WantedBy=multi-user.target

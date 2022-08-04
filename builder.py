@@ -4,7 +4,6 @@
 import argparse
 import logging
 import pathlib
-import re
 import shutil
 import subprocess
 import sys
@@ -28,11 +27,12 @@ def run(*args, **kwargs):
 
 @dataclass
 class Defaults:
+    supported_archs = ["armhf", "arm64"]
     pigen_version: str = "2022-04-04-raspios-bullseye"
     arch: str = "armhf"
     compress: bool = False
     dont_use_docker: bool = False
-    docker_fs_size: str = "100MB"
+    virtual_fs_size: str = "100MB"
 
     src_dir: pathlib.Path = pathlib.Path(__file__).parent
 
@@ -127,19 +127,28 @@ class Builder:
 
     def merge_tree(self):
         """copy files from our tree to pygen and apply our patches"""
+        sufixes_to_skip = [
+            f".{arch}" for arch in Defaults.supported_archs if arch != self.conf.arch
+        ]
         root = self.conf.src_dir / "tree"
         for fpath in root.rglob("*"):
             if fpath == root / "README.md" or not fpath.is_file():
                 continue
-            relpath = fpath.relative_to(root)
-            dest = self.conf.build_dir / relpath
-            if fpath.suffix == ".patch":
-                dest = dest.with_name(re.sub(r".patch$", "", dest.name))
-                logger.debug(f"patching {dest}")
+            dest = self.conf.build_dir / fpath.relative_to(root)
+
+            if fpath.suffix in sufixes_to_skip:
+                continue
+            elif fpath.suffix in (".patch", f".patch-{self.conf.arch}"):
+                dest = dest.with_suffix("")
+                logger.debug(f"patching {dest.relative_to(self.conf.build_dir)}")
                 subprocess.run(["/usr/bin/env", "patch", dest, fpath], check=True)
             else:
-                logger.debug(f"copying {relpath}")
-                shutil.copyfile(fpath, dest, follow_symlinks=True)
+                # arch-specific files (requires removing arch suffix)
+                if fpath.suffix == f".{self.conf.arch}":
+                    dest = dest.with_suffix("")
+                logger.debug(f"copying {dest.relative_to(self.conf.build_dir)}")
+                dest.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copy2(fpath, dest, follow_symlinks=True)
 
     def write_config(self):
         """save main pi-gen config from our defaults and passed values"""
@@ -190,7 +199,7 @@ class Builder:
         with open(export_prerun_sh, "r") as fh:
             content = fh.read()
         with open(export_prerun_sh, "w") as fh:
-            fh.write(content.replace("DOCKER_FS_SIZE", self.conf.docker_fs_size))
+            fh.write(content.replace("VIRTUAL_FS_SIZE", self.conf.virtual_fs_size))
 
     def build(self):
         if self.conf.use_docker:
@@ -257,7 +266,7 @@ def main():
         "--arch",
         help=f"Architecture to build image for. Defaults to {Defaults.arch}",
         default=Defaults.arch,
-        choices=["armhf", "arm64"],
+        choices=Defaults.supported_archs,
         dest="arch",
     )
 
@@ -270,10 +279,10 @@ def main():
     )
 
     parser.add_argument(
-        "--docker-fs-size",
+        "--virtual-fs-size",
         help="Size of docker.fs virtual fs located in a file on /data",
-        default=Defaults.docker_fs_size,
-        dest="docker_fs_size",
+        default=Defaults.virtual_fs_size,
+        dest="virtual_fs_size",
         action="store_true",
     )
 

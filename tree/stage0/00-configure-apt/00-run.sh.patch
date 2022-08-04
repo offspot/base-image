@@ -1,0 +1,24 @@
+--- tree.orig/stage0/00-configure-apt/00-run.sh	2022-05-31 10:21:03.000000000 +0000
++++ tree/stage0/00-configure-apt/00-run.sh	2022-07-11 17:18:28.000000000 +0000
+@@ -2,8 +2,12 @@
+ 
+ install -m 644 files/sources.list "${ROOTFS_DIR}/etc/apt/"
+ install -m 644 files/raspi.list "${ROOTFS_DIR}/etc/apt/sources.list.d/"
++install -m 644 files/docker.list "${ROOTFS_DIR}/etc/apt/sources.list.d/"
+ sed -i "s/RELEASE/${RELEASE}/g" "${ROOTFS_DIR}/etc/apt/sources.list"
+ sed -i "s/RELEASE/${RELEASE}/g" "${ROOTFS_DIR}/etc/apt/sources.list.d/raspi.list"
++sed -i "s/RELEASE/${RELEASE}/g" "${ROOTFS_DIR}/etc/apt/sources.list.d/docker.list"
++sed -i "s/APT_ARCH/$(dpkg --print-architecture)/g" "${ROOTFS_DIR}/etc/apt/sources.list.d/docker.list"
++cat "${ROOTFS_DIR}/etc/apt/sources.list.d/docker.list"
+ 
+ if [ -n "$APT_PROXY" ]; then
+ 	install -m 644 files/51cache "${ROOTFS_DIR}/etc/apt/apt.conf.d/51cache"
+@@ -12,6 +16,8 @@
+ 	rm -f "${ROOTFS_DIR}/etc/apt/apt.conf.d/51cache"
+ fi
+ 
++mkdir -p "${ROOTFS_DIR}/etc/apt/keyrings"
++curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor > "${ROOTFS_DIR}/etc/apt/keyrings/docker.gpg"
+ cat files/raspberrypi.gpg.key | gpg --dearmor > "${ROOTFS_DIR}/etc/apt/trusted.gpg.d/raspberrypi-archive-stable.gpg"
+ on_chroot << EOF
+ apt-get update
