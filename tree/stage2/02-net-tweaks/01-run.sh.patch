@@ -1,0 +1,24 @@
+--- tree.orig/stage2/02-net-tweaks/01-run.sh	2022-05-31 10:21:03.000000000 +0000
++++ tree/stage2/02-net-tweaks/01-run.sh	2022-09-14 15:55:11.000000000 +0000
+@@ -35,3 +35,21 @@
+     echo 1 > "${ROOTFS_DIR}/var/lib/systemd/rfkill/platform-3f300000.mmcnr:wlan"
+     echo 1 > "${ROOTFS_DIR}/var/lib/systemd/rfkill/platform-fe300000.mmcnr:wlan"
+ fi
++
++# unblock WiFi
++echo 0 > "${ROOTFS_DIR}/var/lib/systemd/rfkill/platform-3f300000.mmcnr:wlan"
++echo 0 > "${ROOTFS_DIR}/var/lib/systemd/rfkill/platform-fe300000.mmcnr:wlan"
++
++# runtime config firewall persistence (ap)
++mkdir -p ${ROOTFS_DIR}/etc/iptables
++install -m 755 files/iptables-restore.service       "${ROOTFS_DIR}/etc/systemd/system/"
++
++install -m 664 files/dhcpcd.conf       "${ROOTFS_DIR}/etc/"
++
++on_chroot << EOF
++systemctl daemon-reload
++systemctl enable dhcpcd.service
++systemctl unmask hostapd
++systemctl disable hostapd.service dnsmasq.service iptables-restore.service
++EOF
++

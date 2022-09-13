@@ -1,0 +1,9 @@
+# base image version
+---
+timezone: UTC
+hostname: base-image
+ethernet:
+  type: dhcp
+ap:
+  ssid: Offspot base-image
+  as-gateway: true
