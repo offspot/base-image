@@ -1,0 +1,10 @@
+[Unit]
+Description=Restore iptables configuration
+After=offspot-runtime.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/find /etc/iptables/ -name '*.rules' -exec /sbin/iptables-restore {} \;
+
+[Install]
+WantedBy=multi-user.target

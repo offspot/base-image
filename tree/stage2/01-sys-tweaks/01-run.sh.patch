@@ -4,7 +4,7 @@
  
  install -m 755 files/rc.local		"${ROOTFS_DIR}/etc/"
  
-+install -m 755 files/offspot.json  "${ROOTFS_DIR}/boot/"
++install -m 755 files/offspot.yaml  "${ROOTFS_DIR}/boot/"
 +
 +install -m 644 files/offspot.conf  "${ROOTFS_DIR}/etc/modules-load.d/"
 +install -m 755 files/offspot_bi_init_resize.sh "${ROOTFS_DIR}/usr/sbin/"

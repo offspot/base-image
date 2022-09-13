@@ -1,0 +1,14 @@
+[Unit]
+Description=Offspot Runtime
+Requires=network.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/offspot-config-fromfile /boot/offspot.yaml
+RemainAfterExit=true
+StandardOutput=journal
+
+[Install]
+WantedBy=docker-compose.service multi-user.target
+RequiredBy=docker-compose.service
