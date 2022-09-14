@@ -3,8 +3,10 @@
 # comment and empty lines are omitted ; lines and package names are stripped
 + bash-completion
 + git
-+ vim
-+ screen
++ iftop
++ iotop
++ tmux
++ locate
 
 # exfat support (mkfs, fsck)
 + exfatprogs
