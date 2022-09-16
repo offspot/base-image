@@ -7,4 +7,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-* Based on 2022-04-04-raspios-bullseye's pi-gen
+* Based on 2022-09-06-raspios-bullseye's pi-gen
