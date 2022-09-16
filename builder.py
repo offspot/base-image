@@ -28,7 +28,11 @@ def run(*args, **kwargs):
 @dataclass
 class Defaults:
     supported_archs = ["armhf", "arm64"]
-    pigen_version: str = "2022-04-04-raspios-bullseye"
+    # using supported_archs indexes
+    pigen_versions = [
+        "2022-09-06-raspios-bullseye",
+        "bd85d61c055a23a747c718741b25d3a0c0a7fbef",
+    ]
     arch: str = "armhf"
     compress: bool = False
     dont_use_docker: bool = False
@@ -56,6 +60,10 @@ class Defaults:
     PUBKEY_ONLY_SSH: str = "0"
     STAGE_LIST: str = "stage0 stage1 stage2"
 
+    @property
+    def pigen_ref(self):
+        return self.pigen_versions[self.supported_archs.index(self.arch)]
+
     def __post_init__(self):
         self.output = (
             pathlib.Path(self._output or f"./{self.IMG_NAME}.img")
@@ -64,10 +72,6 @@ class Defaults:
             .with_suffix(".img")  # make sure we request filename ending in .img
         )
         self.build_dir = pathlib.Path(self._build_dir).expanduser().resolve()
-
-    @property
-    def build_64b(self):
-        return self.arch == "arm64"
 
     @classmethod
     def pigen_vars(cls) -> List[str]:
@@ -110,20 +114,31 @@ class Builder:
             logger.warning(f"build-dir exists. reusing ({self.conf.build_dir}")
             return
         logger.info("Cloning Pi-gen")
-        branch = "arm64" if self.conf.build_64b else self.conf.pigen_version
+        run(["git", "init", str(self.conf.build_dir)])
         run(
             [
                 "git",
-                "clone",
+                "-C",
+                str(self.conf.build_dir),
+                "remote",
+                "add",
+                "origin",
+                PIGEN_REPO_URL,
+            ]
+        )
+        run(
+            [
+                "git",
+                "-C",
+                str(self.conf.build_dir),
+                "fetch",
                 "--depth",
                 "1",
-                "--branch",
-                branch,
-                PIGEN_REPO_URL,
-                str(self.conf.build_dir),
-            ],
-            check=True,
+                "origin",
+                self.conf.pigen_ref,
+            ]
         )
+        run(["git", "-C", str(self.conf.build_dir), "checkout", "FETCH_HEAD"])
 
     def merge_tree(self):
         """copy files from our tree to pygen and apply our patches"""
