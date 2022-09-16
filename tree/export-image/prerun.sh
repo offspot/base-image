@@ -96,6 +96,7 @@ if [ "${NO_PRERUN_QCOW2}" = "0" ]; then
     echo "/data:     offset $DATA_OFFSET, length $DATA_LENGTH"
 
     ROOT_FEATURES="^huge_file"
+    # shellcheck disable=SC2043
     for FEATURE in 64bit; do
     if grep -q "$FEATURE" /etc/mke2fs.conf; then
         ROOT_FEATURES="^$FEATURE,$ROOT_FEATURES"
