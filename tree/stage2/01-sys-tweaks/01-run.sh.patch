@@ -16,12 +16,16 @@
  	chown 1000:1000 "${ROOTFS_DIR}"/home/"${FIRST_USER_NAME}"/.ssh/authorized_keys
  	chmod 0600 "${ROOTFS_DIR}"/home/"${FIRST_USER_NAME}"/.ssh/authorized_keys
  fi
-@@ -47,6 +52,9 @@
+@@ -47,6 +52,13 @@
  systemctl enable resize2fs_once
  EOF
  fi
 +on_chroot << EOF
 +systemctl enable resize2fs_once
++EOF
++
++on_chroot << EOF
++ln -s /usr/bin/vim.tiny /usr/local/bin/vim
 +EOF
  
  on_chroot <<EOF
