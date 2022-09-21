@@ -22,3 +22,6 @@
 
 # AP stack
 + hostapd dnsmasq
+
+# not needed on host
+- pi-bluetooth v4l-utils python3-gpiozero python3-rpi.gpio python3-v4l2
