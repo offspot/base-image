@@ -4,6 +4,7 @@
 import argparse
 import logging
 import pathlib
+import re
 import shutil
 import subprocess
 import sys
@@ -36,7 +37,7 @@ class Defaults:
     arch: str = "armhf"
     compress: bool = False
     dont_use_docker: bool = False
-    virtual_fs_size: str = "100MB"
+    virtual_fs_size: str = "100M"  # MiB
 
     src_dir: pathlib.Path = pathlib.Path(__file__).parent
 
@@ -100,6 +101,12 @@ class Builder:
             if xz_fpath.exists():
                 logger.error(f"{xz_fpath} already exists.")
                 return 1
+        if not re.match(r"^\d+(M|G)$", self.conf.virtual_fs_size):
+            logger.error(
+                f"invalid virtual_fs_size={self.conf.virtual_fs_size}. "
+                "Must be suffixed with M or G."
+            )
+            return 1
 
         self.download_pigen()
         self.merge_tree()
@@ -307,10 +314,10 @@ def main():
 
     parser.add_argument(
         "--virtual-fs-size",
-        help="Size of docker.fs virtual fs located in a file on /data",
+        help="Size of docker.fs virtual fs located in a file on /data. "
+        "Must be suffixed with M or G",
         default=Defaults.virtual_fs_size,
         dest="virtual_fs_size",
-        action="store_true",
     )
 
     for name in Defaults.pigen_vars():
