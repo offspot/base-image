@@ -25,3 +25,6 @@
 
 # not needed on host
 - pi-bluetooth v4l-utils python3-gpiozero python3-rpi.gpio python3-v4l2
+
+# disable swap
+- dphys-swapfile
