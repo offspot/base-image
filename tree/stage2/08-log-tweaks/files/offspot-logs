@@ -1,0 +1,15 @@
+In a regular Offspot config:
+
+All messages to syslog are discarded.
+This can be changed in /etc/rsyslog.conf by commenting-out the `*.* ~` line.
+This requires restarting the service: `systemctl restart rsyslog`
+
+Additionnaly, systemd's journald is volatile: not persisting logs accross reboots.
+It also sets a limit to the journal size.
+This can be disabled in /etc/systemd/journald.conf.d/00-offspot-volatile.conf
+This requires restarting the service: `systemctl restart systemd-journald`
+
+Additionnaly, /var/log is mounted as tmpfs.
+This can be changed by commenting-out according line in /etc/fstab.
+This requires remounting: `mount -o remount /var/log`.
+If files are busy in /var/log, stop related services before remounting (or just restart)

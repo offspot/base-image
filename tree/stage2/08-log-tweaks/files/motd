@@ -1,0 +1,5 @@
++-+-+-+-+-+-+-+
+|o|f|f|s|p|o|t|
++-+-+-+-+-+-+-+
+
+syslog is disabled, journald is volatile. Read more in /etc/offspot-logs
