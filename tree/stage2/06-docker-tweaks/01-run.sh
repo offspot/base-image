@@ -2,7 +2,7 @@
 
 # instruct docker to work off the loop-device and use a low-disk-space-usage logger
 mkdir -p ${ROOTFS_DIR}/etc/docker
-printf '{"data-root": "/data/virtual/docker", "log-driver": "local", "log-opts": {"max-size": "5m", "max-file": "2"}}' > ${ROOTFS_DIR}/etc/docker/daemon.json
+printf '{"data-root": "/data/virtual/docker", "log-driver": "journald"}' > ${ROOTFS_DIR}/etc/docker/daemon.json
 
 # instruct containerd to work off the loop-device as well
 sed -i -E 's/^#root\s=.+/root = "\/data\/virtual\/containerd"/' ${ROOTFS_DIR}/etc/containerd/config.toml
