@@ -2,10 +2,10 @@
 
 # instruct docker to work off the loop-device and use a low-disk-space-usage logger
 mkdir -p ${ROOTFS_DIR}/etc/docker
-printf '{"data-root": "/data/virtual/docker", "log-driver": "journald"}' > ${ROOTFS_DIR}/etc/docker/daemon.json
+printf '{"data-root": "/data/docker", "log-driver": "journald"}' > ${ROOTFS_DIR}/etc/docker/daemon.json
 
 # instruct containerd to work off the loop-device as well
-sed -i -E 's/^#root\s=.+/root = "\/data\/virtual\/containerd"/' ${ROOTFS_DIR}/etc/containerd/config.toml
+sed -i -E 's/^#root\s=.+/root = "\/data\/containerd"/' ${ROOTFS_DIR}/etc/containerd/config.toml
 
 # add docker group to main user
 on_chroot << EOF

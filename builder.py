@@ -36,7 +36,6 @@ class Defaults:
     arch: str = "armhf"
     compress: bool = False
     dont_use_docker: bool = False
-    virtual_fs_size: str = "100MB"
 
     src_dir: pathlib.Path = pathlib.Path(__file__).parent
 
@@ -106,15 +105,10 @@ class Builder:
                 logger.error(f"{xz_fpath} already exists.")
                 return 1
 
-        if self.conf.src_config and not self.conf.src_config.exists():
-            logger.error(f"requested config `{self.conf.src_config}` does not exists.")
-            return 1
-
         self.download_pigen()
         self.merge_tree()
         self.write_config()
         self.update_packages()
-        self.apply_fixes()
 
         # log (debug) actual config file
         config_path = self.conf.build_dir / "config"
@@ -239,15 +233,6 @@ class Builder:
                 )
             rm_fpath.chmod(0o755)
 
-    def apply_fixes(self):
-        """Code/env driven fixes to files"""
-        logger.info("Applying fixes")
-        export_prerun_sh = self.conf.build_dir / "export-image" / "prerun.sh"
-        with open(export_prerun_sh, "r") as fh:
-            content = fh.read()
-        with open(export_prerun_sh, "w") as fh:
-            fh.write(content.replace("VIRTUAL_FS_SIZE", self.conf.virtual_fs_size))
-
     def build(self):
         if self.conf.use_docker:
             self.build_docker()
@@ -322,14 +307,6 @@ def main():
         help="Don't use docker to build. Additional depenendencies required",
         default=Defaults.dont_use_docker,
         dest="dont_use_docker",
-        action="store_true",
-    )
-
-    parser.add_argument(
-        "--virtual-fs-size",
-        help="Size of docker.fs virtual fs located in a file on /data",
-        default=Defaults.virtual_fs_size,
-        dest="virtual_fs_size",
         action="store_true",
     )
 
