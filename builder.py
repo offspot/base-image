@@ -9,7 +9,7 @@ import subprocess
 import sys
 import tempfile
 from dataclasses import dataclass
-from typing import List
+from typing import List, Optional
 
 NAME = "bi-builder"
 VERSION = "0.1"
@@ -47,6 +47,9 @@ class Defaults:
     _output: str = ""
     output: pathlib.Path = None
 
+    _src_config: str = ""
+    src_config: Optional[pathlib.Path] = None
+
     IMG_NAME: str = "offspot-base"
     LOCALE_DEFAULT: str = "en_US.UTF-8"
     TARGET_HOSTNAME: str = "offspot-base"
@@ -72,6 +75,8 @@ class Defaults:
             .with_suffix(".img")  # make sure we request filename ending in .img
         )
         self.build_dir = pathlib.Path(self._build_dir).expanduser().resolve()
+        if self._src_config:
+            self.src_config = pathlib.Path(self._src_config).expanduser().resolve()
 
     @classmethod
     def pigen_vars(cls) -> List[str]:
@@ -101,11 +106,21 @@ class Builder:
                 logger.error(f"{xz_fpath} already exists.")
                 return 1
 
+        if self.conf.src_config and not self.conf.src_config.exists():
+            logger.error(f"requested config `{self.conf.src_config}` does not exists.")
+            return 1
+
         self.download_pigen()
         self.merge_tree()
         self.write_config()
         self.update_packages()
         self.apply_fixes()
+
+        # log (debug) actual config file
+        config_path = self.conf.build_dir / "config"
+        with open(config_path, "r") as fh:
+            logger.debug(f"starting pi-gen build with {config_path}\n{fh.read()}")
+
         self.build()
 
     def download_pigen(self):
@@ -169,6 +184,11 @@ class Builder:
         """save main pi-gen config from our defaults and passed values"""
         logger.info("Writing config")
         with open(self.conf.build_dir / "config", "w") as fh:
+            if self.conf.src_config:
+                with open(self.conf.src_config, "r") as src_fh:
+                    fh.write(f"# passed src_config from {self.conf.src_config}\n")
+                    fh.write(src_fh.read())
+                    fh.write("\n# end of passed config\n")
             for key in self.conf.pigen_vars():
                 value = getattr(self.conf, key)
                 if value is not None:
@@ -334,6 +354,13 @@ def main():
         default=Defaults.keep_build_dir,
         dest="keep_build_dir",
         action="store_true",
+    )
+
+    parser.add_argument(
+        "--config",
+        help="[dev] Use as base of for config file. All builder-exposed variables "
+        "will be appended to the file (and this overwrite values).",
+        dest="_src_config",
     )
 
     parser.add_argument(
