@@ -16,3 +16,9 @@
 
 # using docker instead of balena or podman
 + docker-ce docker-ce-cli containerd.io docker-compose-plugin
+
+# runtime-config
++ python3-pip python3-yaml
+
+# AP stack
++ hostapd dnsmasq
