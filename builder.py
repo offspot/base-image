@@ -204,7 +204,7 @@ class Builder:
     def update_packages(self):
         """rewrites stage2's packages file to add or remove those we requested to"""
         logger.info("Updating packages list")
-        packages = set()
+        packages, rm_packages = set(), set()
         fpath = self.conf.build_dir / "stage2" / "01-sys-tweaks" / "00-packages"
         with open(fpath, "r") as fh:
             for line in fh.readlines():
@@ -219,6 +219,7 @@ class Builder:
                         if line[0] == "+":
                             packages.add(item)
                         if line[0] == "-":
+                            rm_packages.add(item)
                             try:
                                 packages.remove(item)
                             except KeyError:
@@ -226,6 +227,17 @@ class Builder:
 
         with open(fpath, "w") as fh:
             fh.write("\n".join(packages))
+
+        if rm_packages:
+            rm_fpath = (
+                self.conf.build_dir / "stage2" / "01-sys-tweaks" / "00-run-chroot.sh"
+            )
+            with open(rm_fpath, "w") as fh:
+                fh.write(
+                    "#!/bin/bash -e\napt-get remove --auto-remove -y "
+                    f"{' '.join(rm_packages)}\n"
+                )
+            rm_fpath.chmod(0o755)
 
     def apply_fixes(self):
         """Code/env driven fixes to files"""
