@@ -3,13 +3,8 @@
 # adaptation of raspi-config's init_resize.sh script that is used
 # as an init on first on-device boot to resize root partition to fill sd size.
 #
-# this version does not resize root partition (its size is fixed) but takes care of
-# our third “data” partition.
-# this partition being exfat, it can't be resized and is recreated, passing its
-# content to root partition (in /tmp) temporarily so it's not lost.
-#
-# /!\ there should not be any substantial data on /data partition at this stage
-# this “backup” feature is complimentary.
+# this version does not resize root partition (its size is fixed) but instead
+# resizes our third “data” partition.
 # Any tool using this base image should recreate the /data partition to its wanted
 # size and thus remove the /data/master_fs flag file that enables this to run.
 #
@@ -124,11 +119,6 @@ main () {
     reboot_pi
   fi
 
-  # dump /data content (should not be large) into /tmp
-  mount / -o remount,rw
-  mount /data -o remount,ro
-  tar -c -f /mnt/data_part.tar --exclude "/data/master_fs" --exclude "/data/.fseventsd" --exclude "/data/.Spotlight-V100" /data
-  sync
   umount /data
 
   # resize partition (not filesystem)
@@ -137,15 +127,13 @@ main () {
     return 1
   fi
 
-  # recreate filesystem (can't rezise exFAT)
-  mkfs.exfat -L data "$DATA_PART_DEV" > /dev/null
+  # resize third partition's filesystem
+  resize2fs "$DATA_PART_DEV"
 
-  # restore files onto data partition
+  # remove master fs flag
   mount /data -o rw
-  tar -C /data -x --strip-components 1 -f /mnt/data_part.tar
-  rm -f /mnt/data_part.tar
+  rm -f /data/master_fs
   sync
-  mount / -o remount,ro
   mount /data -o remount,ro
 
   fix_partuuid
@@ -182,7 +170,7 @@ if ! check_commands; then
 fi
 
 if main; then
-  whiptail --infobox "Recreated data filesystem. Rebooting in 5 seconds..." 20 60
+  whiptail --infobox "Resized data filesystem. Rebooting in 5 seconds..." 20 60
   sleep 5
 else
   whiptail --msgbox "Could not recreate data filesystem Rebooting...\n${FAIL_REASON}" 20 60

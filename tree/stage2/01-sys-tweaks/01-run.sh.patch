@@ -1,12 +1,11 @@
 --- tree.orig/stage2/01-sys-tweaks/01-run.sh	2022-05-31 10:21:03.000000000 +0000
 +++ tree/stage2/01-sys-tweaks/01-run.sh	2022-07-25 14:57:50.000000000 +0000
-@@ -11,9 +11,14 @@
+@@ -11,9 +11,13 @@
  
  install -m 755 files/rc.local		"${ROOTFS_DIR}/etc/"
  
 +install -m 755 files/offspot.yaml  "${ROOTFS_DIR}/boot/"
 +
-+install -m 644 files/offspot.conf  "${ROOTFS_DIR}/etc/modules-load.d/"
 +install -m 755 files/offspot_bi_init_resize.sh "${ROOTFS_DIR}/usr/sbin/"
 +
  if [ -n "${PUBKEY_SSH_FIRST_USER}" ]; then
@@ -21,7 +20,7 @@
  EOF
  fi
 +on_chroot << EOF
-+systemctl enable resize2fs_once
++systemctl disable resize2fs_once
 +EOF
 +
 +on_chroot << EOF
