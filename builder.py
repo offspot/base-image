@@ -33,7 +33,7 @@ class Defaults:
         "2022-09-06-raspios-bullseye",
         "bd85d61c055a23a747c718741b25d3a0c0a7fbef",
     ]
-    arch: str = "armhf"
+    arch: str = "arm64"
     compress: bool = False
     dont_use_docker: bool = False
 
