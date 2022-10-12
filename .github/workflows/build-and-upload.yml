@@ -23,13 +23,13 @@ jobs:
     runs-on: ubuntu-22.04
     strategy:
       matrix:
-        arch: [armhf, arm64]
+        arch: [arm64, armhf]
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3.1.0
 
       - name: Set up Python ${{ matrix.python }}
-        uses: actions/setup-python@v1
+        uses: actions/setup-python@v4.3.0
         with:
           python-version: 3.8
           architecture: x64
@@ -63,7 +63,7 @@ jobs:
           ./builder.py --arch "${{ matrix.arch }}" --compress --output "${{ env.BASE_IMAGE_FILENAME_RADICAL }}"
 
       - name: Upload base image to S3
-        if: ${{ github.event.inputs.publish-to-s3 == 'yes' }}
+        if: github.event.inputs.publish-to-s3 == 'yes' && matrix.arch == 'arm64'
         env:
           S3URL: ${{ secrets.BRANCHES_S3_URL }}
         run: |
@@ -76,7 +76,7 @@ jobs:
           echo '- [${{ env.BASE_IMAGE_INFO_FILENAME }}](https://s3.eu-central-1.wasabisys.com/it-offspot-base-branches/${{ env.BASE_IMAGE_INFO_FILENAME }})' >> $GITHUB_STEP_SUMMARY
 
       - name: Upload base image to WebDAV
-        if: startsWith(github.ref, 'refs/tags/')
+        if: startsWith(github.ref, 'refs/tags/') && matrix.arch == 'arm64'
         run: |
           echo "Uploading ${{ matrix.arch }} image ${{ env.BASE_IMAGE_FILENAME }} & info to WebDAV..."
           curl -u "${{ secrets.DRIVE_CREDENTIALS }}" -T "${{ env.BASE_IMAGE_FILENAME }}" -sw '%{http_code}' "https://drive.offspot.it/_webdav/base/${{ env.BASE_IMAGE_FILENAME }}"
