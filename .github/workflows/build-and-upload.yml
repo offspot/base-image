@@ -52,6 +52,7 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/') != true
         run: |
           sudo modprobe binfmt_misc
+          sudo apt update
           sudo apt install qemu-user-static
           ./builder.py --arch "${{ matrix.arch }}" --compress --enable-ssh 1 --pubkey-ssh-first-user "${PUBKEYS//|/\\n}" --output "${{ env.BASE_IMAGE_FILENAME_RADICAL }}"
 
@@ -59,6 +60,7 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/') == true
         run: |
           sudo modprobe binfmt_misc
+          sudo apt update
           sudo apt install qemu-user-static
           ./builder.py --arch "${{ matrix.arch }}" --compress --output "${{ env.BASE_IMAGE_FILENAME_RADICAL }}"
 
