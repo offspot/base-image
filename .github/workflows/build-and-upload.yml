@@ -21,14 +21,11 @@ jobs:
       # developers's public keys to facilitate testing (only for test builds)
       PUBKEYS: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC4UTXOYXrKA6dR7KizO2AvqqHKQGJE/FZF2oKTiofWEYDf+UWylksH4WjFmVczDUHN653Ve/QOIyRfI6IUuVa2hJ+l02xFV7rdl7L5zSZwKiSJr+SefouzWIFwS3VS3gbLOqk864a1NkUR97yKYjxsZiT9fISf771HqEKhsXOzZDOFbxt5u+YAaAJIJlU0EMKkDRBBtAVxmLFHme0uSpZ8DlYMFARGe1s0I++1eby0NVtzP3TarouvkPN1cFmS7UhQCsHzcmDMcNyrtHGBnlgjihd4m2bppmY75xTTR/PQTKDWqwklyYZhiDCKjZYzxWTk493SwKfZfaT9FOU0r4FT reg@kiwix|ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAEAQCgGhWboby8xdQzJUQdq67mo2RmmFB54y5qjji9BhIa36dAr/K2OMEIgQVsyAuF8/8fc5ezbbZkgln4azBTWDSmHjgQ8h/B3A7lZ9U29FymiATy/7YAb5o62AIzDrZS775QPEBOKry/gZRbBDbxLk372Q/J2FUIrcdTNQq8MVU9AmFX75E79oXX/dIxV5LHegBEVyLzWmf2yATRfBdBlL1WkgYQKItkTO+ClPsCUYMyKy03jea9KWUcW/7rYbicRFHwxCE4nZ/oCaB6ROEV7/o32MSmge6Yc35tBCIY6UBEeiYoxK0mOfca1/CJ3yWZhI/4XyPLZtOgl3FybOnyVfnLvhE7UaPhnVo/oSqjwIzLkVcu4P4fxpplxwCTMhXa9qHNwCJQzhr77wWzIG7kIyAqSY9Lx1YosqKoN7hLKCHjf06aY+agGvQ0iugWf0re5jUXFhhcja3PNpxwTpHap1QeKlXNiPgiSTGgZNSiJ9qyDmHOxrtOHZXlaXx0anrSKCRD/3XqQAkk0n8KbKS6Ik5ur3D3htHtSo7zwr7XprFqLYK07CzxviiVKNR9O5ATHSpiF9UZJnCbRllBLzelGyzz2qRMwJR+R8O7dGPPDUV5Tb8YmSA42TFLBduLZ7U+mtbUa2diApxMxO3S6d2QPiZGc3jUmI0dAkm6h3c3Sbi2kdFDhHe2bo58yu7NTF1TN0Of2dUZySGuM7nNdfmceJYKfgDxtIW7XwKbsin9uwrR3jRJp7HNRpc+InXEU9w61EcZFD9d+ou9hwHtby4g9DnKhlFTz6MyfbMc686qOCL6LbU659aszwf0LlgDcN+wXCHyZ/1fyPAMiHEMZJ6D6NbqprUJ1yYvh/69fRuSdEk21b8bkxFnGKPZVBalxRL+zq7LP5ONSnbibHAO9Qh7848cOz4Kq5SaVMfypmeh2Rz9kB5Y3by9/jZIuoOm2FwIXOO1fC1rh9Wlk8Z30MdV9//8heFD9JVLIcR+Irb/fMVb5ejcyrs82rH2E4NN4yrnpSzlLnDgF/+IdzzUurXYJqtfkh1Ngb7/32lOBwrXv8elqvZHxzM3iNrHNS5VpLz89zG8xlbQTiuTPJZePKmljaqeo4qI5PUGh3XbBUR6KDsdJHdJZB1Z8Tyt1WwuNOtPtpgb9vquRCYXZLe2rwm5GMannDcl+sgDzI8d+DaARgMdtaffdy9IczNozpuVtAzDxKTmR5qd2EgYQqU29FbTRdyC3avYGVajgwgsDykvWZppKOfusnvKMRNN9hPSwnHXwKO97dtvjJVogtbbKT54c/CeTY538QF9Xd/oFVHdy7QvG0uFmxQ2leFRxmIUmgmW+IlWGR7HpmI9leFt9T133eaj tom@bsf|ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCpp290SxTzG0+cz1LJBKwVogAj30kGqGcgRZ+z1rAYJH8QydA8ruFhVjpAgClkMiVoDBJIHOSGyTE2qD74PV2JmXq9gOuMHvQxjwFUpmC4V9WCO9omJM8lO/2rlo6PCYppUH450ppypUGYL1mNY1z4ZP4DbPIDU+QVABG+5vkQsmBKc2Pr/ZX4pzqISGwJSiFunFnsoXs7nk/qHN5tf7fh5md8kQBsS2+wygDdQyALLHIMlUCayyQL8kulEPxs+cJxkbImyG4wHKAgKi8Ei3z6tHL8Lr7w1hVUDmlDBE5TkKHeHtwV1Ai0VGmTiM18NyFIlkmZNkp4mFJtWVbnqPI+Q2GXnMa388CHVJUfpWIdSs5O1i8bP32h33azx0z849azjyox9xugJlCh0l6C3bVCOJn1TcZ9i9vCrGG3P4dbtz9hQtPthl/p+970wMm1p5AXtb6RBDdeFmTM511i4Mgdepg1dC0xEgzVTpLKrwsR2LPICl4/ClNAGZqcHtMBScm2+3imfHuTJk4GY06XQ6UnhZTSJqUS8FGxwCPz9B2ppd+2rNWrtfpdRuphVBGUbwBevJpK/S/SgjWFiF8YKba0Jn/FBjgXDWJsN8tJirUsvDQrM9KWXcOwcD0jvNdvYBLxIDHlCY3noQ80+2PZTT6by5GOGE1CaczVGn4Yktm/nQ== florian@bsf|"
     runs-on: ubuntu-22.04
-    strategy:
-      matrix:
-        arch: [arm64, armhf]
     steps:
       - name: Checkout code
         uses: actions/checkout@v3.1.0
 
-      - name: Set up Python ${{ matrix.python }}
+      - name: Setup Python 3.8
         uses: actions/setup-python@v4.3.0
         with:
           python-version: 3.8
@@ -36,11 +33,11 @@ jobs:
 
       - name: Set BASE_IMAGE_FILENAME_RADICAL from branch name
         if: startsWith(github.ref, 'refs/tags/') != true
-        run: echo "BASE_IMAGE_FILENAME_RADICAL=offspot-base-${{ matrix.arch }}-$GITHUB_HEAD_REF-$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+        run: echo "BASE_IMAGE_FILENAME_RADICAL=offspot-base-arm64-$GITHUB_HEAD_REF-$(git rev-parse --short HEAD)" >> $GITHUB_ENV
 
       - name: Set BASE_IMAGE_FILENAME_RADICAL from tag name
         if: startsWith(github.ref, 'refs/tags/')
-        run: echo "BASE_IMAGE_FILENAME_RADICAL=offspot-base-${{ matrix.arch }}-${GITHUB_REF##*/}" >> $GITHUB_ENV
+        run: echo "BASE_IMAGE_FILENAME_RADICAL=offspot-base-arm64-${GITHUB_REF##*/}" >> $GITHUB_ENV
 
       - name: Set BASE_IMAGE_FILENAME
         run: echo "BASE_IMAGE_FILENAME=${{ env.BASE_IMAGE_FILENAME_RADICAL }}.img.xz" >> $GITHUB_ENV
@@ -54,7 +51,7 @@ jobs:
           sudo modprobe binfmt_misc
           sudo apt update
           sudo apt install qemu-user-static
-          ./builder.py --arch "${{ matrix.arch }}" --compress --enable-ssh 1 --pubkey-ssh-first-user "${PUBKEYS//|/\\n}" --output "${{ env.BASE_IMAGE_FILENAME_RADICAL }}"
+          ./builder.py --compress --enable-ssh 1 --pubkey-ssh-first-user "${PUBKEYS//|/\\n}" --output "${{ env.BASE_IMAGE_FILENAME_RADICAL }}"
 
       - name: Build prod base image
         if: startsWith(github.ref, 'refs/tags/') == true
@@ -62,10 +59,10 @@ jobs:
           sudo modprobe binfmt_misc
           sudo apt update
           sudo apt install qemu-user-static
-          ./builder.py --arch "${{ matrix.arch }}" --compress --output "${{ env.BASE_IMAGE_FILENAME_RADICAL }}"
+          ./builder.py --compress --output "${{ env.BASE_IMAGE_FILENAME_RADICAL }}"
 
       - name: Upload base image to S3
-        if: github.event.inputs.publish-to-s3 == 'yes' && matrix.arch == 'arm64'
+        if: github.event.inputs.publish-to-s3 == 'yes'
         env:
           S3URL: ${{ secrets.BRANCHES_S3_URL }}
         run: |
@@ -78,9 +75,9 @@ jobs:
           echo '- [${{ env.BASE_IMAGE_INFO_FILENAME }}](https://s3.eu-central-1.wasabisys.com/it-offspot-base-branches/${{ env.BASE_IMAGE_INFO_FILENAME }})' >> $GITHUB_STEP_SUMMARY
 
       - name: Upload base image to WebDAV
-        if: startsWith(github.ref, 'refs/tags/') && matrix.arch == 'arm64'
+        if: startsWith(github.ref, 'refs/tags/')
         run: |
-          echo "Uploading ${{ matrix.arch }} image ${{ env.BASE_IMAGE_FILENAME }} & info to WebDAV..."
+          echo "Uploading image ${{ env.BASE_IMAGE_FILENAME }} & info to WebDAV..."
           curl -u "${{ secrets.DRIVE_CREDENTIALS }}" -T "${{ env.BASE_IMAGE_FILENAME }}" -sw '%{http_code}' "https://drive.offspot.it/_webdav/base/${{ env.BASE_IMAGE_FILENAME }}"
           curl -u "${{ secrets.DRIVE_CREDENTIALS }}" -T "${{ env.BASE_IMAGE_INFO_FILENAME }}" -sw '%{http_code}' "https://drive.offspot.it/_webdav/base/${{ env.BASE_IMAGE_INFO_FILENAME }}"
           echo "### Artefacts" >> $GITHUB_STEP_SUMMARY
