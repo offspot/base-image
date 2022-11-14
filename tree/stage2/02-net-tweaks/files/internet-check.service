@@ -1,0 +1,7 @@
+[Unit]
+Description=Internet connectivity checker
+After=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/internet-check

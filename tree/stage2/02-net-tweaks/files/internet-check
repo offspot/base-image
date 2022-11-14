@@ -1,0 +1,39 @@
+#!/usr/bin/env python3
+
+""" tests whether connected to Internet (UDP to CloudFlare DNS) or not """
+
+import pathlib
+import socket
+import sys
+
+LOG_FILE = pathlib.Path("/var/run/internet")
+
+
+def is_connected(host="1.1.1.1"):
+    try:
+        socket.create_connection((host, 53), timeout=8)
+        return True
+    except Exception:
+        pass
+    return False
+
+
+def main():
+    connected = is_connected()
+    connected_str = "online" if connected else "offline"
+    print(connected_str)
+
+    LOG_FILE.parent.mkdir(parents=True, exist_ok=True)
+    try:
+        with open(LOG_FILE, "r") as fh:
+            if fh.read().strip() == connected_str:
+                return
+    except Exception:
+        ...
+
+    with open(LOG_FILE, "w") as fh:
+        fh.write(f"{connected_str}\n")
+
+
+if __name__ == "__main__":
+    sys.exit(main())
