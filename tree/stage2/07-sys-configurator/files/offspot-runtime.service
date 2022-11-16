@@ -1,6 +1,6 @@
 [Unit]
 Description=Offspot Runtime
-Requires=network.target
+Requires=network.target internet-check.service
 After=network-online.target
 
 [Service]
