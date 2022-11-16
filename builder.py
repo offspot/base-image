@@ -239,10 +239,11 @@ class Builder:
         else:
             self.build_nodocker()
         logger.info(f"Moving built image into final location {self.conf.output.parent}")
-        built_img = self.conf.build_dir / "deploy" / self.conf.output.stem
-        shutil.move(built_img.with_suffix(".img"), self.conf.output)
+        built_stem = self.conf.build_dir / "deploy" / self.conf.output.stem
+        shutil.move(built_stem.with_name(f"{built_stem.name}.img"), self.conf.output)
         shutil.move(
-            built_img.with_suffix(".info"), self.conf.output.with_suffix(".info")
+            built_stem.with_name(f"{built_stem.name}.info"),
+            self.conf.output.with_suffix(".info"),
         )
         if self.conf.compress:
             logger.info("Compressing image file…")
