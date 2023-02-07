@@ -305,7 +305,7 @@ def main():
 
     parser.add_argument(
         "--no-docker",
-        help="Don't use docker to build. Additional depenendencies required",
+        help="Don't use docker to build. Additional dependencies required",
         default=Defaults.dont_use_docker,
         dest="dont_use_docker",
         action="store_true",
