@@ -12,7 +12,7 @@ from dataclasses import dataclass
 from typing import List, Optional
 
 NAME = "bi-builder"
-VERSION = "0.1"
+VERSION = "1.0.0"
 PIGEN_REPO_URL = "https://github.com/RPi-Distro/pi-gen.git"
 CONTAINER_NAME = "pigen_work"
 
