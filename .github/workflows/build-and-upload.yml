@@ -40,7 +40,10 @@ jobs:
         run: echo "BASE_IMAGE_FILENAME_RADICAL=offspot-base-arm64-${GITHUB_REF##*/}" >> $GITHUB_ENV
 
       - name: Set BASE_IMAGE_FILENAME
-        run: echo "BASE_IMAGE_FILENAME=${{ env.BASE_IMAGE_FILENAME_RADICAL }}.img.xz" >> $GITHUB_ENV
+        run: echo "BASE_IMAGE_FILENAME=${{ env.BASE_IMAGE_FILENAME_RADICAL }}.img" >> $GITHUB_ENV
+
+      - name: Set BASE_IMAGE_FILENAME_XZ
+        run: echo "BASE_IMAGE_FILENAME_XZ=${{ env.BASE_IMAGE_FILENAME_RADICAL }}.img.xz" >> $GITHUB_ENV
 
       - name: Set BASE_IMAGE_INFO_FILENAME
         run: echo "BASE_IMAGE_INFO_FILENAME=${{ env.BASE_IMAGE_FILENAME_RADICAL }}.info" >> $GITHUB_ENV
@@ -51,7 +54,7 @@ jobs:
           sudo modprobe binfmt_misc
           sudo apt update
           sudo apt install qemu-user-static
-          ./builder.py --compress --enable-ssh 1 --pubkey-ssh-first-user "${PUBKEYS//|/\\n}" --output "${{ env.BASE_IMAGE_FILENAME_RADICAL }}"
+          ./builder.py --compress --enable-ssh 1 --pubkey-ssh-first-user "${PUBKEYS//|/\\n}" --output "${{ env.BASE_IMAGE_FILENAME }}"
 
       - name: Build prod base image
         if: startsWith(github.ref, 'refs/tags/') == true
@@ -59,7 +62,7 @@ jobs:
           sudo modprobe binfmt_misc
           sudo apt update
           sudo apt install qemu-user-static
-          ./builder.py --compress --output "${{ env.BASE_IMAGE_FILENAME_RADICAL }}"
+          ./builder.py --compress --output "${{ env.BASE_IMAGE_FILENAME }}"
 
       - name: Upload base image to S3
         if: github.event.inputs.publish-to-s3 == 'yes'
@@ -67,19 +70,19 @@ jobs:
           S3URL: ${{ secrets.BRANCHES_S3_URL }}
         run: |
           pip3 install "kiwixstorage==0.8.3" "progressbar2==4.0.0" "humanfriendly==10.0"
-          echo "Uploading image ${{ env.BASE_IMAGE_FILENAME }} & info to S3..."
-          s3upload "${{ env.BASE_IMAGE_FILENAME }}"
+          echo "Uploading image ${{ env.BASE_IMAGE_FILENAME_XZ }} & info to S3..."
+          s3upload "${{ env.BASE_IMAGE_FILENAME_XZ }}"
           s3upload "${{ env.BASE_IMAGE_INFO_FILENAME }}"
           echo '### Artefacts' >> $GITHUB_STEP_SUMMARY
-          echo '- [${{ env.BASE_IMAGE_FILENAME }}](https://s3.eu-central-1.wasabisys.com/it-offspot-base-branches/${{ env.BASE_IMAGE_FILENAME }})' >> $GITHUB_STEP_SUMMARY
+          echo '- [${{ env.BASE_IMAGE_FILENAME_XZ }}](https://s3.eu-central-1.wasabisys.com/it-offspot-base-branches/${{ env.BASE_IMAGE_FILENAME_XZ }})' >> $GITHUB_STEP_SUMMARY
           echo '- [${{ env.BASE_IMAGE_INFO_FILENAME }}](https://s3.eu-central-1.wasabisys.com/it-offspot-base-branches/${{ env.BASE_IMAGE_INFO_FILENAME }})' >> $GITHUB_STEP_SUMMARY
 
       - name: Upload base image to WebDAV
         if: startsWith(github.ref, 'refs/tags/')
         run: |
-          echo "Uploading image ${{ env.BASE_IMAGE_FILENAME }} & info to WebDAV..."
-          curl -u "${{ secrets.DRIVE_CREDENTIALS }}" -T "${{ env.BASE_IMAGE_FILENAME }}" -sw '%{http_code}' "https://drive.offspot.it/_webdav/base/${{ env.BASE_IMAGE_FILENAME }}"
+          echo "Uploading image ${{ env.BASE_IMAGE_FILENAME_XZ }} & info to WebDAV..."
+          curl -u "${{ secrets.DRIVE_CREDENTIALS }}" -T "${{ env.BASE_IMAGE_FILENAME_XZ }}" -sw '%{http_code}' "https://drive.offspot.it/_webdav/base/${{ env.BASE_IMAGE_FILENAME_XZ }}"
           curl -u "${{ secrets.DRIVE_CREDENTIALS }}" -T "${{ env.BASE_IMAGE_INFO_FILENAME }}" -sw '%{http_code}' "https://drive.offspot.it/_webdav/base/${{ env.BASE_IMAGE_INFO_FILENAME }}"
           echo "### Artefacts" >> $GITHUB_STEP_SUMMARY
-          echo "- [${{ env.BASE_IMAGE_FILENAME }}](https://drive.offspot.it/base/${{ env.BASE_IMAGE_FILENAME }})" >> $GITHUB_STEP_SUMMARY
+          echo "- [${{ env.BASE_IMAGE_FILENAME_XZ }}](https://drive.offspot.it/base/${{ env.BASE_IMAGE_FILENAME_XZ }})" >> $GITHUB_STEP_SUMMARY
           echo "- [${{ env.BASE_IMAGE_INFO_FILENAME }}](https://drive.offspot.it/base/${{ env.BASE_IMAGE_INFO_FILENAME }})" >> $GITHUB_STEP_SUMMARY
