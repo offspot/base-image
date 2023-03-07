@@ -42,58 +42,22 @@ if [ "${NO_PRERUN_QCOW2}" = "0" ]; then
     parted --script "${IMG_FILE}" unit B mkpart primary ext4 "${ROOT_PART_START}" "$((ROOT_PART_START + ROOT_PART_SIZE - 1))"
     parted --script "${IMG_FILE}" unit B mkpart primary NTFS "${DATA_PART_START}" "$((DATA_PART_START + DATA_PART_SIZE - 1))"
 
-    PARTED_OUT=$(parted -sm "${IMG_FILE}" unit b print)
-    BOOT_OFFSET=$(echo "$PARTED_OUT" | grep -e '^1:' | cut -d':' -f 2 | tr -d B)
-    BOOT_LENGTH=$(echo "$PARTED_OUT" | grep -e '^1:' | cut -d':' -f 4 | tr -d B)
-
-    ROOT_OFFSET=$(echo "$PARTED_OUT" | grep -e '^2:' | cut -d':' -f 2 | tr -d B)
-    ROOT_LENGTH=$(echo "$PARTED_OUT" | grep -e '^2:' | cut -d':' -f 4 | tr -d B)
-
-    DATA_OFFSET=$(echo "$PARTED_OUT" | grep -e '^3:' | cut -d':' -f 2 | tr -d B)
-    DATA_LENGTH=$(echo "$PARTED_OUT" | grep -e '^3:' | cut -d':' -f 4 | tr -d B)
-
-    echo "Mounting BOOT_DEV..."
+    echo "Creating loop device..."
     cnt=0
-    until BOOT_DEV=$(losetup --show -f -o "${BOOT_OFFSET}" --sizelimit "${BOOT_LENGTH}" "${IMG_FILE}"); do
+    until LOOP_DEV="$(losetup --show --find --partscan "$IMG_FILE")"; do
         if [ $cnt -lt 5 ]; then
             cnt=$((cnt + 1))
-            echo "Error in losetup for BOOT_DEV.  Retrying..."
+            echo "Error in losetup.  Retrying..."
             sleep 5
         else
-            echo "ERROR: losetup for BOOT_DEV failed; exiting"
+            echo "ERROR: losetup failed; exiting"
             exit 1
         fi
     done
 
-    echo "Mounting ROOT_DEV..."
-    cnt=0
-    until ROOT_DEV=$(losetup --show -f -o "${ROOT_OFFSET}" --sizelimit "${ROOT_LENGTH}" "${IMG_FILE}"); do
-        if [ $cnt -lt 5 ]; then
-            cnt=$((cnt + 1))
-            echo "Error in losetup for ROOT_DEV.  Retrying..."
-            sleep 5
-        else
-            echo "ERROR: losetup for ROOT_DEV failed; exiting"
-            exit 1
-        fi
-    done
-
-    echo "Mounting DATA_DEV..."
-    cnt=0
-    until DATA_DEV=$(losetup --show -f -o "${DATA_OFFSET}" --sizelimit "${DATA_LENGTH}" "${IMG_FILE}"); do
-        if [ $cnt -lt 5 ]; then
-            cnt=$((cnt + 1))
-            echo "Error in losetup for DATA_DEV.  Retrying..."
-            sleep 5
-        else
-            echo "ERROR: losetup for DATA_DEV failed; exiting"
-            exit 1
-        fi
-    done
-
-    echo "/boot: offset $BOOT_OFFSET, length $BOOT_LENGTH"
-    echo "/:     offset $ROOT_OFFSET, length $ROOT_LENGTH"
-    echo "/data:     offset $DATA_OFFSET, length $DATA_LENGTH"
+    BOOT_DEV="${LOOP_DEV}p1"
+    ROOT_DEV="${LOOP_DEV}p2"
+    DATA_DEV="${LOOP_DEV}p3"
 
     ROOT_FEATURES="^huge_file"
     # shellcheck disable=SC2043
@@ -102,7 +66,7 @@ if [ "${NO_PRERUN_QCOW2}" = "0" ]; then
         ROOT_FEATURES="^$FEATURE,$ROOT_FEATURES"
     fi
     done
-    mkdosfs -n boot -F 32 -s 4 -v "$BOOT_DEV" > /dev/null
+    mkdosfs -n bootfs -F 32 -s 4 -v "$BOOT_DEV" > /dev/null
     mkfs.ext4 -L rootfs -O "$ROOT_FEATURES" "$ROOT_DEV" > /dev/null
     # not using ROOT_FEATURES to allow fs above 2TiB (huge_file) and 4TiB (64b)
     mkfs.ext4 -L data "$DATA_DEV" > /dev/null

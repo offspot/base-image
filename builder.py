@@ -30,8 +30,8 @@ class Defaults:
     supported_archs = ["armhf", "arm64"]
     # using supported_archs indexes
     pigen_versions = [
-        "2022-09-06-raspios-bullseye",
-        "bd85d61c055a23a747c718741b25d3a0c0a7fbef",
+        "2023-02-21-raspios-bullseye",
+        "25e2319effa91eb95edd9d9209eb9f8a584d67be",
     ]
     arch: str = "arm64"
     compress: bool = False
