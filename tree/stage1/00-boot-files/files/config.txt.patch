@@ -1,0 +1,12 @@
+*** tree.orig/stage1/00-boot-files/files/config.txt	2023-03-08 08:33:49
+--- tree/stage1/00-boot-files/files/config.txt	2023-03-08 08:36:04
+***************
+*** 1,6 ****
+--- 1,7 ----
+  # For more options and information see
+  # http://rpf.io/configtxt
+  # Some settings may impact device functionality. See link above for details
++ dtoverlay=i2c-rtc,pcf2127
+  
+  # uncomment if you get no picture on HDMI for a default "safe" mode
+  #hdmi_safe=1
