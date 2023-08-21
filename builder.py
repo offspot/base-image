@@ -4,6 +4,7 @@
 import argparse
 import logging
 import pathlib
+import platform
 import shutil
 import subprocess
 import sys
@@ -29,22 +30,23 @@ def run(*args, **kwargs):
 class Defaults:
     supported_archs = ["armhf", "arm64"]
     # using supported_archs indexes
-    pigen_versions = [
-        "2023-02-21-raspios-bullseye",
-        "25e2319effa91eb95edd9d9209eb9f8a584d67be",
+    pigen_versions = [  # ~ 2023-05-03-raspios-buster
+        "01d24ef22778337ed04cf9d6444b1be57b6a1e1a",
+        "a86d732f58c901c80a5422d43e24ce37037e2665",
     ]
     arch: str = "arm64"
+    is_macos: bool = platform.system() == "Darwin"
     compress: bool = False
     dont_use_docker: bool = False
 
     src_dir: pathlib.Path = pathlib.Path(__file__).parent
 
     _build_dir: str = tempfile.mkdtemp(prefix="pigen")
-    build_dir: pathlib.Path = None
+    build_dir: pathlib.Path | None = None
     keep_build_dir: bool = False
 
     _output: str = ""
-    output: pathlib.Path = None
+    output: pathlib.Path | None = None
 
     _src_config: str = ""
     src_config: Optional[pathlib.Path] = None
@@ -57,8 +59,8 @@ class Defaults:
     TIMEZONE_DEFAULT: str = "UTC"
     FIRST_USER_NAME: str = "user"
     FIRST_USER_PASS: str = "raspberry"
-    ENABLE_SSH: bool = "0"
-    PUBKEY_SSH_FIRST_USER: str = None
+    ENABLE_SSH: str = "0"
+    PUBKEY_SSH_FIRST_USER: str = ""
     PUBKEY_ONLY_SSH: str = "0"
     STAGE_LIST: str = "stage0 stage1 stage2"
 
@@ -151,10 +153,19 @@ class Builder:
 
     def merge_tree(self):
         """copy files from our tree to pygen and apply our patches"""
+
+        root = self.conf.src_dir / "tree"
+
+        # pi-gen officially only supports debian/ubuntu.
+        # running on macOS now requires tweaking the main script a bit
+        if self.conf.is_macos:
+            # rename all xxx.macos files in tree to xxx
+            for fpath in root.rglob("*.macos"):
+                fpath.rename(fpath.with_suffix(""))
+
         sufixes_to_skip = [
             f".{arch}" for arch in Defaults.supported_archs if arch != self.conf.arch
         ]
-        root = self.conf.src_dir / "tree"
         for fpath in root.rglob("*"):
             if fpath == root / "README.md" or not fpath.is_file():
                 continue
