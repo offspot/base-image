@@ -9,8 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Updated to pi-gen 2023-02-21-raspios-bullseye
+- Updated to 2023-05-03-raspios-buster
 - Added support for hardware clock.
+- Using new `offspot-config` package (which includes runtime_config)
 
 ## [1.0.1] - 2023-03-07
 
