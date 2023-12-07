@@ -10,6 +10,6 @@ services:
       - "80:80"
     volumes:
       - type: bind
-        source: /boot/offspot.yaml
+        source: /boot/firmware/offspot.yaml
         target: /var/www/offspot.yaml
         read_only: true

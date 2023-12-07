@@ -131,3 +131,6 @@ dmypy.json
 # image files
 *.img
 /*.info
+
+build/
+tree-*.orig/

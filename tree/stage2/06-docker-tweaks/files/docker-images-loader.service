@@ -1,7 +1,7 @@
 [Unit]
 Description=Load docker images
-BindsTo=docker.service
-After=docker.service
+BindsTo=balena.socket
+After=balena.socket
 
 [Service]
 Type=oneshot

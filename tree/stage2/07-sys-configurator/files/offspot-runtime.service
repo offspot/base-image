@@ -5,7 +5,7 @@ After=network-online.target
 
 [Service]
 Type=oneshot
-ExecStart=/usr/local/bin/offspot-runtime-config-fromfile /boot/offspot.yaml
+ExecStart=/usr/local/offspot-python/bin/offspot-runtime-config-fromfile /boot/firmware/offspot.yaml
 RemainAfterExit=true
 StandardOutput=journal
 

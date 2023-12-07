@@ -11,11 +11,11 @@
 + jq
 + tree
 
-# using docker instead of balena or podman
-+ docker-ce docker-ce-cli containerd.io docker-compose-plugin
+# docker stack: disabled in favor of balena (stage2/06-docker-tweaks)
+# docker-ce docker-ce-cli containerd.io docker-compose-plugin
 
 # runtime-config
-+ python3-pip python3-yaml
++ python3-venv
 
 # AP stack
 + hostapd dnsmasq
@@ -25,3 +25,10 @@
 
 # disable swap
 - dphys-swapfile
+
+# continue to use dhcpcd5 (replaced by network-manager in 2023-10)
+# purposedly not using `dhcpcd5` as its a virtual package with conflict from raspberry-sys-mod
++ dhcpcd
+
+# iptables mandatory for balena as well as captive-portal
++ iptables

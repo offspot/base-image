@@ -1,4 +1,4 @@
 # using HTTPS URLs to workaround orange-mali's MITM broken apt mirror (dev)
-deb https://archive.raspberrypi.org/debian/ RELEASE main
+deb https://archive.raspberrypi.com/debian/ RELEASE main
 # Uncomment line below then 'apt-get update' to enable 'apt-get source'
-#deb-src https://archive.raspberrypi.org/debian/ RELEASE main
+#deb-src https://archive.raspberrypi.com/debian/ RELEASE main

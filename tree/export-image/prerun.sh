@@ -10,8 +10,8 @@ if [ "${NO_PRERUN_QCOW2}" = "0" ]; then
     rm -rf "${ROOTFS_DIR}"
     mkdir -p "${ROOTFS_DIR}"
 
-    BOOT_SIZE="$((256 * 1024 * 1024))"
-    ROOT_SIZE=$(du --apparent-size -s "${EXPORT_ROOTFS_DIR}" --exclude var/cache/apt/archives --exclude boot --block-size=1 | cut -f 1)
+    BOOT_SIZE="$((512 * 1024 * 1024))"
+    ROOT_SIZE=$(du --apparent-size -s "${EXPORT_ROOTFS_DIR}" --exclude var/cache/apt/archives --exclude boot/firmware --block-size=1 | cut -f 1)
     # use ~256Mi for data. shall be recreated by final-image creator tool
     DATA_SIZE="$((256 * 1024 * 1024))"
 
@@ -44,7 +44,7 @@ if [ "${NO_PRERUN_QCOW2}" = "0" ]; then
 
     echo "Creating loop device..."
     cnt=0
-    until LOOP_DEV="$(losetup --show --find --partscan "$IMG_FILE")"; do
+    until ensure_next_loopdev && LOOP_DEV="$(losetup --show --find --partscan "$IMG_FILE")"; do
         if [ $cnt -lt 5 ]; then
             cnt=$((cnt + 1))
             echo "Error in losetup.  Retrying..."
@@ -72,8 +72,8 @@ if [ "${NO_PRERUN_QCOW2}" = "0" ]; then
     mkfs.ext4 -L data "$DATA_DEV" > /dev/null
 
     mount -v "$ROOT_DEV" "${ROOTFS_DIR}" -t ext4
-    mkdir -p "${ROOTFS_DIR}/boot"
-    mount -v "$BOOT_DEV" "${ROOTFS_DIR}/boot" -t vfat
+    mkdir -p "${ROOTFS_DIR}/boot/firmware"
+    mount -v "$BOOT_DEV" "${ROOTFS_DIR}/boot/firmware" -t vfat
     mkdir -p "${ROOTFS_DIR}/data"
     mount "$DATA_DEV" "${ROOTFS_DIR}/data"
     touch "${ROOTFS_DIR}/data/master_fs"
@@ -83,6 +83,6 @@ if [ "${NO_PRERUN_QCOW2}" = "0" ]; then
     # add base httpd server allowing docker stack tests
     wget -O "${ROOTFS_DIR}/data/images/base-httpd-1.0.tar" https://drive.offspot.it/base/base-httpd-1.0.tar
 
-    rsync -aHAXx --exclude /var/cache/apt/archives --exclude /boot "${EXPORT_ROOTFS_DIR}/" "${ROOTFS_DIR}/"
-    rsync -rtx "${EXPORT_ROOTFS_DIR}/boot/" "${ROOTFS_DIR}/boot/"
+    rsync -aHAXx --exclude /var/cache/apt/archives --exclude /boot/firmware "${EXPORT_ROOTFS_DIR}/" "${ROOTFS_DIR}/"
+    rsync -rtx "${EXPORT_ROOTFS_DIR}/boot/firmware/" "${ROOTFS_DIR}/boot/firmware/"
 fi

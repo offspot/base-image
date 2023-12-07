@@ -1,10 +1,8 @@
 In a regular Offspot config:
 
-All messages to syslog are discarded.
-This can be changed in /etc/rsyslog.conf by commenting-out the `*.* ~` line.
-This requires restarting the service: `systemctl restart rsyslog`
+No syslog serber is installed nor running/
 
-Additionnaly, systemd's journald is volatile: not persisting logs accross reboots.
+systemd's journald is volatile: not persisting logs accross reboots.
 It also sets a limit to the journal size.
 This can be disabled in /etc/systemd/journald.conf.d/00-offspot-volatile.conf
 This requires restarting the service: `systemctl restart systemd-journald`

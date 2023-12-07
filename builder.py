@@ -31,8 +31,8 @@ class Defaults:
     supported_archs = ["armhf", "arm64"]
     # using supported_archs indexes
     pigen_versions = [  # ~ 2023-05-03-raspios-buster
-        "01d24ef22778337ed04cf9d6444b1be57b6a1e1a",
-        "a86d732f58c901c80a5422d43e24ce37037e2665",
+        "2023-12-05-raspios-bookworm",
+        "2023-12-05-raspios-bookworm-arm64",
     ]
     arch: str = "arm64"
     is_macos: bool = platform.system() == "Darwin"
@@ -245,10 +245,10 @@ class Builder:
             rm_fpath.chmod(0o755)
 
     def build(self):
-        if self.conf.use_docker:
-            self.build_docker()
-        else:
-            self.build_nodocker()
+        built = self.build_docker() if self.conf.use_docker else self.build_nodocker()
+        if not built:
+            logger.error("Failed to build image")
+            return
         logger.info(f"Moving built image into final location {self.conf.output.parent}")
         built_stem = self.conf.build_dir / "deploy" / self.conf.output.stem
         shutil.move(built_stem.with_name(f"{built_stem.name}.img"), self.conf.output)
@@ -272,13 +272,16 @@ class Builder:
             )
         subprocess.run(["/usr/bin/env", "ls", "-lh", self.conf.output.parent])
 
-    def build_nodocker(self):
+    def build_nodocker(self) -> bool:
         logger.info("Starting build")
-        subprocess.run(["./build.sh"], cwd=self.conf.build_dir)
+        return subprocess.run(["./build.sh"], cwd=self.conf.build_dir).returncode == 0
 
-    def build_docker(self):
+    def build_docker(self) -> bool:
         logger.info("Starting build using docker")
-        subprocess.run(["./build-docker.sh"], cwd=self.conf.build_dir)
+        return (
+            subprocess.run(["./build-docker.sh"], cwd=self.conf.build_dir).returncode
+            == 0
+        )
 
     def cleanup(self):
         if not subprocess.run(
