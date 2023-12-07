@@ -1,3 +1,0 @@
-deb http://mirrors.ircam.fr/pub/raspbian/raspbian/ RELEASE main contrib non-free rpi
-# Uncomment line below then 'apt-get update' to enable 'apt-get source'
-#deb-src http://mirrors.ircam.fr/pub/raspbian/raspbian/ RELEASE main contrib non-free rpi

@@ -14,7 +14,7 @@ if [ "${NO_PRERUN_QCOW2}" = "0" ]; then
 	sed -i "s/ROOTDEV/PARTUUID=${ROOT_PARTUUID}/" "${ROOTFS_DIR}/etc/fstab"
 	sed -i "s/DATADEV/PARTUUID=${DATA_PARTUUID}/" "${ROOTFS_DIR}/etc/fstab"
 
-	sed -i "s/ROOTDEV/PARTUUID=${ROOT_PARTUUID}/" "${ROOTFS_DIR}/boot/cmdline.txt"
+	sed -i "s/ROOTDEV/PARTUUID=${ROOT_PARTUUID}/" "${ROOTFS_DIR}/boot/firmware/cmdline.txt"
 
 fi
 

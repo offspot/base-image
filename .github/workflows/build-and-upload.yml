@@ -64,6 +64,11 @@ jobs:
           sudo apt install qemu-user-static
           ./builder.py --compress --output "${{ env.BASE_IMAGE_FILENAME }}"
 
+      - name: Extract image
+        run: |
+          sudo apt install xz-utils
+          unxz ${{ env.BASE_IMAGE_FILENAME_XZ }}
+
       - name: Upload base image to S3
         if: github.event.inputs.publish-to-s3 == 'yes'
         env:
@@ -73,8 +78,10 @@ jobs:
           echo "Uploading image ${{ env.BASE_IMAGE_FILENAME_XZ }} & info to S3..."
           s3upload "${{ env.BASE_IMAGE_FILENAME_XZ }}"
           s3upload "${{ env.BASE_IMAGE_INFO_FILENAME }}"
+          s3upload "${{ env.BASE_IMAGE_FILENAME }}"
           echo '### Artefacts' >> $GITHUB_STEP_SUMMARY
           echo '- [${{ env.BASE_IMAGE_FILENAME_XZ }}](https://s3.eu-central-1.wasabisys.com/it-offspot-base-branches/${{ env.BASE_IMAGE_FILENAME_XZ }})' >> $GITHUB_STEP_SUMMARY
+          echo '- [${{ env.BASE_IMAGE_FILENAME }}](https://s3.eu-central-1.wasabisys.com/it-offspot-base-branches/${{ env.BASE_IMAGE_FILENAME }})' >> $GITHUB_STEP_SUMMARY
           echo '- [${{ env.BASE_IMAGE_INFO_FILENAME }}](https://s3.eu-central-1.wasabisys.com/it-offspot-base-branches/${{ env.BASE_IMAGE_INFO_FILENAME }})' >> $GITHUB_STEP_SUMMARY
 
       - name: Upload base image to WebDAV
@@ -83,6 +90,8 @@ jobs:
           echo "Uploading image ${{ env.BASE_IMAGE_FILENAME_XZ }} & info to WebDAV..."
           curl -u "${{ secrets.DRIVE_CREDENTIALS }}" -T "${{ env.BASE_IMAGE_FILENAME_XZ }}" -sw '%{http_code}' "https://drive.offspot.it/_webdav/base/${{ env.BASE_IMAGE_FILENAME_XZ }}"
           curl -u "${{ secrets.DRIVE_CREDENTIALS }}" -T "${{ env.BASE_IMAGE_INFO_FILENAME }}" -sw '%{http_code}' "https://drive.offspot.it/_webdav/base/${{ env.BASE_IMAGE_INFO_FILENAME }}"
+          curl -u "${{ secrets.DRIVE_CREDENTIALS }}" -T "${{ env.BASE_IMAGE_FILENAME }}" -sw '%{http_code}' "https://drive.offspot.it/_webdav/base/${{ env.BASE_IMAGE_FILENAME }}"
           echo "### Artefacts" >> $GITHUB_STEP_SUMMARY
           echo "- [${{ env.BASE_IMAGE_FILENAME_XZ }}](https://drive.offspot.it/base/${{ env.BASE_IMAGE_FILENAME_XZ }})" >> $GITHUB_STEP_SUMMARY
+          echo "- [${{ env.BASE_IMAGE_FILENAME }}](https://drive.offspot.it/base/${{ env.BASE_IMAGE_FILENAME }})" >> $GITHUB_STEP_SUMMARY
           echo "- [${{ env.BASE_IMAGE_INFO_FILENAME }}](https://drive.offspot.it/base/${{ env.BASE_IMAGE_INFO_FILENAME }})" >> $GITHUB_STEP_SUMMARY

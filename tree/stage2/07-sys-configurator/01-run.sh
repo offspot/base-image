@@ -1,8 +1,9 @@
 #!/bin/bash -e
 
 on_chroot << EOF
-# pip3 install https://github.com/offspot/offspot-config/archive/refs/heads/main.zip
-pip3 install offspot-config==1.3.0
+python3 -m venv /usr/local/offspot-python
+# /usr/local/offspot-python/bin/pip install https://github.com/offspot/offspot-config/archive/refs/heads/main.zip
+/usr/local/offspot-python/bin/pip install offspot-config==1.4.6
 EOF
 
 install -m 755 files/offspot-runtime.service       "${ROOTFS_DIR}/etc/systemd/system/"

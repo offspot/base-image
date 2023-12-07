@@ -11,7 +11,7 @@
 # https://github.com/RPi-Distro/raspi-config/blob/master/usr/lib/raspi-config/init_resize.sh
 
 reboot_pi () {
-  umount /boot
+  umount /boot/firmware
   umount /data
   mount / -o remount,ro
   sync
@@ -42,7 +42,7 @@ get_variables () {
 	ROOT_DEV="/dev/${ROOT_DEV_NAME}"
 	ROOT_PART_NUM=$(cat "/sys/block/${ROOT_DEV_NAME}/${ROOT_PART_NAME}/partition")
 
-	BOOT_PART_DEV=$(findmnt /boot -o source -n)
+	BOOT_PART_DEV=$(findmnt /boot/firmware -o source -n)
 	BOOT_PART_NAME=$(echo "$BOOT_PART_DEV" | cut -d "/" -f 3)
 	BOOT_DEV_NAME=$(echo /sys/block/*/"${BOOT_PART_NAME}" | cut -d "/" -f 4)
 	BOOT_PART_NUM=$(cat "/sys/block/${BOOT_DEV_NAME}/${BOOT_PART_NAME}/partition")
@@ -77,7 +77,7 @@ fix_partuuid() {
   DISKID="$(tr -dc 'a-f0-9' < /dev/hwrng | dd bs=1 count=8 2>/dev/null)"
   if printf "x\ni\n0x$DISKID\nr\nw\n" | fdisk "$ROOT_DEV" > /dev/null; then
     sed -i "s/${OLD_DISKID}/${DISKID}/g" /etc/fstab
-    sed -i "s/${OLD_DISKID}/${DISKID}/" /boot/cmdline.txt
+    sed -i "s/${OLD_DISKID}/${DISKID}/" /boot/firmware/cmdline.txt
     sync
   fi
 
@@ -146,19 +146,19 @@ mount -t sysfs sys /sys
 mount -t tmpfs tmp /run
 mkdir -p /run/systemd
 
-mount /boot
+mount /boot/firmware
 mount / -o remount,ro
 mount /data -o ro
 
 # remove itself from boot, regardless of whether we're resizing or not
-sed -i 's| init=/usr/sbin/offspot_bi_init_resize\.sh||' /boot/cmdline.txt
-sed -i 's| sdhci\.debug_quirks2=4||' /boot/cmdline.txt
+sed -i 's| init=/usr/sbin/offspot_bi_init_resize\.sh||' /boot/firmware/cmdline.txt
+sed -i 's| sdhci\.debug_quirks2=4||' /boot/firmware/cmdline.txt
 
-if ! grep -q splash /boot/cmdline.txt; then
-  sed -i "s/ quiet//g" /boot/cmdline.txt
+if ! grep -q splash /boot/firmware/cmdline.txt; then
+  sed -i "s/ quiet//g" /boot/firmware/cmdline.txt
 fi
 sync
-mount /boot -o remount,ro
+mount /boot/firmware -o remount,ro
 
 # skip resizing process if not on a declared master fs
 if [ ! -f /data/master_fs ] ; then
