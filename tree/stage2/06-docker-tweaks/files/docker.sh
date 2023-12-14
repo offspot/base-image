@@ -1,0 +1,3 @@
+#!/bin/sh
+
+balena-engine "$@"

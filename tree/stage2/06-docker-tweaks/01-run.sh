@@ -2,6 +2,8 @@
 
 # download/install balena-engine using static bin
 curl -sL https://github.com/balena-os/balena-engine/releases/download/v20.10.41/balena-engine-v20.10.41-arm64.tar.gz | tar xzv -C ${ROOTFS_DIR}/usr/local/bin/ --strip-components=1
+# fake docker bin redirecting to balena (helps with dev)
+install -m 755 files/docker "${ROOTFS_DIR}/usr/local/bin/"
 
 # download/install docker-compose
 curl -L "https://github.com/docker/compose/releases/download/v2.23.3/docker-compose-linux-aarch64" -o ${ROOTFS_DIR}/usr/local/bin/docker-compose
