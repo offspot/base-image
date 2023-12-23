@@ -240,7 +240,7 @@ class Builder:
             with open(rm_fpath, "w") as fh:
                 fh.write(
                     "#!/bin/bash -e\napt-get remove --auto-remove -y "
-                    f"{' '.join(rm_packages)}\n"
+                    + f"{' '.join(rm_packages)}\n"
                 )
             rm_fpath.chmod(0o755)
 
@@ -248,7 +248,7 @@ class Builder:
         built = self.build_docker() if self.conf.use_docker else self.build_nodocker()
         if not built:
             logger.error("Failed to build image")
-            return
+            return 1
         logger.info(f"Moving built image into final location {self.conf.output.parent}")
         built_stem = self.conf.build_dir / "deploy" / self.conf.output.stem
         shutil.move(built_stem.with_name(f"{built_stem.name}.img"), self.conf.output)
