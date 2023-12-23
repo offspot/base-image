@@ -11,6 +11,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - `docker` command forwarding cli to balena-engine to ease dev and debug
 
+### Changed
+
+- Using offspot-config 1.5.0
+- Fixed docker-images-loader to depend on balena.service
+
 ## [1.1.0] - 2023-12-08
 
 ### Added
