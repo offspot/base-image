@@ -127,8 +127,14 @@ main () {
     return 1
   fi
 
+  # check & repair third partition to ensure resize will succeed
+  fsck.ext4 -y -f -v "$DATA_PART_DEV"
+
   # resize third partition's filesystem
-  resize2fs "$DATA_PART_DEV"
+  resize2fs -f -p "$DATA_PART_DEV"
+
+  # and recheck to ensure we'll be OK
+  fsck.ext4 -y -f -v "$DATA_PART_DEV"
 
   # remove master fs flag
   mount /data -o rw

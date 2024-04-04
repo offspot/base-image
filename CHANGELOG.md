@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Changed
+
+- Check part3 filesystem before and after resize2fs to ensure it succeeeds #63
+- Use force (-f) for resize2fs
+
 ## [1.2.0]
 
 ### Added
