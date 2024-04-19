@@ -1,14 +1,15 @@
 #!/bin/bash -e
 
 # add all optional WiFi firmwares
-install -m 644 files/brcmfmac43455-sdio.bin_2021-11-30_minimal "${ROOTFS_DIR}/lib/firmware/cypress/"                      # brcm43455    supports-19_2021-11-30
-install -m 644 files/brcmfmac43455-sdio.bin_2021-10-05_3rd-trial-minimal "${ROOTFS_DIR}/lib/firmware/cypress/"            # brcm43455    supports-24_2021-10-05_noap+sta
-install -m 644 files/brcmfmac43455-sdio.clm_blob_2021-11-17_rpi "${ROOTFS_DIR}/lib/firmware/cypress/"                     # brcm43455    supports-19_2021-11-30, supports-24_2021-10-05_noap+sta
-install -m 644 files/brcmfmac43455-sdio.bin_2015-03-01_7.45.18.0_ub19.10.1 "${ROOTFS_DIR}/lib/firmware/cypress/"          # brcm43455    supports-32_2015-03-01_unreliable
-install -m 644 files/brcmfmac43455-sdio.clm_blob_2018-02-26_rpi "${ROOTFS_DIR}/lib/firmware/cypress/"                     # brcm43455    supports-32_2015-03-01_unreliable
-install -m 644 files/brcmfmac43430-sdio.bin_2018-09-11_7.45.98.65 "${ROOTFS_DIR}/lib/firmware/cypress/"                   # brcm43430    supports-30_2018-09-28
-install -m 644 files/brcmfmac43430-sdio.clm_blob_2018-09-11_7.45.98.65 "${ROOTFS_DIR}/lib/firmware/cypress/"              # brcm43430    supports-30_2018-09-28
-
+FIRMWARES_URL=https://drive.offspot.it/wifi-firmwares
+FIRMWARES_DIR="${ROOTFS_DIR}/lib/firmware/cypress/"
+curl -sL --remote-name --create-dirs --output-dir "${FIRMWARES_DIR}" "${FIRMWARES_URL}/brcmfmac43455-sdio.bin_2021-11-30_minimal"                    # brcm43455    supports-19_2021-11-30
+curl -sL --remote-name --create-dirs --output-dir "${FIRMWARES_DIR}" "${FIRMWARES_URL}/brcmfmac43455-sdio.bin_2021-10-05_3rd-trial-minimal"          # brcm43455    supports-24_2021-10-05_noap+sta
+curl -sL --remote-name --create-dirs --output-dir "${FIRMWARES_DIR}" "${FIRMWARES_URL}/brcmfmac43455-sdio.clm_blob_2021-11-17_rpi"                   # brcm43455    supports-19_2021-11-30, supports-24_2021-10-05_noap+sta
+curl -sL --remote-name --create-dirs --output-dir "${FIRMWARES_DIR}" "${FIRMWARES_URL}/brcmfmac43455-sdio.bin_2015-03-01_7.45.18.0_ub19.10.1"        # brcm43455    supports-32_2015-03-01_unreliable
+curl -sL --remote-name --create-dirs --output-dir "${FIRMWARES_DIR}" "${FIRMWARES_URL}/brcmfmac43455-sdio.clm_blob_2018-02-26_rpi"                   # brcm43455    supports-32_2015-03-01_unreliable
+curl -sL --remote-name --create-dirs --output-dir "${FIRMWARES_DIR}" "${FIRMWARES_URL}/brcmfmac43430-sdio.bin_2018-09-11_7.45.98.65"                 # brcm43430    supports-30_2018-09-28
+curl -sL --remote-name --create-dirs --output-dir "${FIRMWARES_DIR}" "${FIRMWARES_URL}/brcmfmac43430-sdio.clm_blob_2018-09-11_7.45.98.65"            # brcm43430    supports-30_2018-09-28
 
 on_chroot << EOF
 # move raspios firmwares to dedicated files
