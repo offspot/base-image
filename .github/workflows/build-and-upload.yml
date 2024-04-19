@@ -43,7 +43,9 @@ jobs:
           with open(os.getenv("GITHUB_ENV"), "a") as fh:
             fh.write(f"IS_RELEASE={'yes' if is_release else ''}\n")
             fh.write(f"BASE_IMAGE_FILENAME={radical}.img\n")
+            fh.write(f"BASE_IMAGE_FILENAME_MD5={radical}.img.md5\n")
             fh.write(f"BASE_IMAGE_FILENAME_XZ={radical}.img.xz\n")
+            fh.write(f"BASE_IMAGE_FILENAME_XZ_MD5={radical}.img.xz.md5\n")
             fh.write(f"BASE_IMAGE_INFO_FILENAME={radical}.info\n")
 
       - name: Checkout code
@@ -76,6 +78,11 @@ jobs:
           sudo apt install xz-utils
           unxz --keep ${{ env.BASE_IMAGE_FILENAME_XZ }}
 
+      - name: Compute MD5 checksum
+        run: |
+          md5sum "${{ env.BASE_IMAGE_FILENAME }}" > "${{ env.BASE_IMAGE_FILENAME_MD5 }}"
+          md5sum "${{ env.BASE_IMAGE_FILENAME_XZ }}" > "${{ env.BASE_IMAGE_FILENAME_XZ_MD5 }}"
+
       - name: Upload base image to S3
         if: github.event.inputs.publish-to-s3 == 'yes'
         env:
@@ -85,11 +92,15 @@ jobs:
           echo "Uploading image ${{ env.BASE_IMAGE_FILENAME_XZ }} & info to S3..."
           s3upload "${{ env.BASE_IMAGE_FILENAME_XZ }}"
           s3upload "${{ env.BASE_IMAGE_INFO_FILENAME }}"
+          s3upload "${{ env.BASE_IMAGE_FILENAME_MD5 }}"
+          s3upload "${{ env.BASE_IMAGE_FILENAME_XZ_MD5 }}"
           s3upload "${{ env.BASE_IMAGE_FILENAME }}"
           echo '### Artefacts' >> $GITHUB_STEP_SUMMARY
           echo '- [${{ env.BASE_IMAGE_FILENAME_XZ }}](https://s3.eu-central-1.wasabisys.com/it-offspot-base-branches/${{ env.BASE_IMAGE_FILENAME_XZ }})' >> $GITHUB_STEP_SUMMARY
           echo '- [${{ env.BASE_IMAGE_FILENAME }}](https://s3.eu-central-1.wasabisys.com/it-offspot-base-branches/${{ env.BASE_IMAGE_FILENAME }})' >> $GITHUB_STEP_SUMMARY
           echo '- [${{ env.BASE_IMAGE_INFO_FILENAME }}](https://s3.eu-central-1.wasabisys.com/it-offspot-base-branches/${{ env.BASE_IMAGE_INFO_FILENAME }})' >> $GITHUB_STEP_SUMMARY
+          echo '- [${{ env.BASE_IMAGE_FILENAME_MD5 }}](https://s3.eu-central-1.wasabisys.com/it-offspot-base-branches/${{ env.BASE_IMAGE_FILENAME_MD5 }})' >> $GITHUB_STEP_SUMMARY
+          echo '- [${{ env.BASE_IMAGE_FILENAME_XZ_MD5 }}](https://s3.eu-central-1.wasabisys.com/it-offspot-base-branches/${{ env.BASE_IMAGE_FILENAME_XZ_MD5 }})' >> $GITHUB_STEP_SUMMARY
 
       - name: Upload base image to WebDAV
         if: ${{ env.IS_RELEASE }}
@@ -97,8 +108,12 @@ jobs:
           echo "Uploading image ${{ env.BASE_IMAGE_FILENAME_XZ }} & info to WebDAV..."
           curl -u "${{ secrets.DRIVE_CREDENTIALS }}" -T "${{ env.BASE_IMAGE_FILENAME_XZ }}" -sw '%{http_code}' "https://drive.offspot.it/_webdav/base/${{ env.BASE_IMAGE_FILENAME_XZ }}"
           curl -u "${{ secrets.DRIVE_CREDENTIALS }}" -T "${{ env.BASE_IMAGE_INFO_FILENAME }}" -sw '%{http_code}' "https://drive.offspot.it/_webdav/base/${{ env.BASE_IMAGE_INFO_FILENAME }}"
+          curl -u "${{ secrets.DRIVE_CREDENTIALS }}" -T "${{ env.BASE_IMAGE_FILENAME_MD5 }}" -sw '%{http_code}' "https://drive.offspot.it/_webdav/base/${{ env.BASE_IMAGE_FILENAME_MD5 }}"
+          curl -u "${{ secrets.DRIVE_CREDENTIALS }}" -T "${{ env.BASE_IMAGE_FILENAME_XZ_MD5 }}" -sw '%{http_code}' "https://drive.offspot.it/_webdav/base/${{ env.BASE_IMAGE_FILENAME_XZ_MD5 }}"
           curl -u "${{ secrets.DRIVE_CREDENTIALS }}" -T "${{ env.BASE_IMAGE_FILENAME }}" -sw '%{http_code}' "https://drive.offspot.it/_webdav/base/${{ env.BASE_IMAGE_FILENAME }}"
           echo "### Artefacts" >> $GITHUB_STEP_SUMMARY
           echo "- [${{ env.BASE_IMAGE_FILENAME_XZ }}](https://drive.offspot.it/base/${{ env.BASE_IMAGE_FILENAME_XZ }})" >> $GITHUB_STEP_SUMMARY
           echo "- [${{ env.BASE_IMAGE_FILENAME }}](https://drive.offspot.it/base/${{ env.BASE_IMAGE_FILENAME }})" >> $GITHUB_STEP_SUMMARY
           echo "- [${{ env.BASE_IMAGE_INFO_FILENAME }}](https://drive.offspot.it/base/${{ env.BASE_IMAGE_INFO_FILENAME }})" >> $GITHUB_STEP_SUMMARY
+          echo "- [${{ env.BASE_IMAGE_FILENAME_MD5 }}](https://drive.offspot.it/base/${{ env.BASE_IMAGE_FILENAME_MD5 }})" >> $GITHUB_STEP_SUMMARY
+          echo "- [${{ env.BASE_IMAGE_FILENAME_XZ_MD5 }}](https://drive.offspot.it/base/${{ env.BASE_IMAGE_FILENAME_XZ_MD5 }})" >> $GITHUB_STEP_SUMMARY
