@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - WiFi firmwares are downloaded at build time instead of being copied from repo
+- Based on pi-gen `2024-03-15-raspios-bookworm`
 
 ## [1.2.1] - 2024-04-04
 

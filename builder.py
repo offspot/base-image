@@ -31,8 +31,8 @@ class Defaults:
     supported_archs = ["armhf", "arm64"]
     # using supported_archs indexes
     pigen_versions = [  # ~ 2023-05-03-raspios-buster
-        "2023-12-05-raspios-bookworm",
-        "2023-12-05-raspios-bookworm-arm64",
+        "2024-03-15-raspios-bookworm",
+        "2024-03-15-raspios-bookworm-arm64",
     ]
     arch: str = "arm64"
     is_macos: bool = platform.system() == "Darwin"
