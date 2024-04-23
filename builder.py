@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
+
+from __future__ import annotations
 
 import argparse
 import logging
@@ -10,7 +11,6 @@ import subprocess
 import sys
 import tempfile
 from dataclasses import dataclass
-from typing import List, Optional
 
 NAME = "bi-builder"
 VERSION = "1.0.1"
@@ -23,17 +23,17 @@ logger = logging.getLogger("builder")
 
 def run(*args, **kwargs):
     logger.debug(f"running {args=} -- {kwargs=}")
-    return subprocess.run(*args, **kwargs)
+    return subprocess.run(*args, **kwargs, check=True)
 
 
 @dataclass
 class Defaults:
-    supported_archs = ["armhf", "arm64"]
+    supported_archs = ("armhf", "arm64")
     # using supported_archs indexes
-    pigen_versions = [  # ~ 2023-05-03-raspios-buster
+    pigen_versions = (  # ~ 2023-05-03-raspios-buster
         "2024-03-15-raspios-bookworm",
         "2024-03-15-raspios-bookworm-arm64",
-    ]
+    )
     arch: str = "arm64"
     is_macos: bool = platform.system() == "Darwin"
     compress: bool = False
@@ -41,7 +41,7 @@ class Defaults:
 
     src_dir: pathlib.Path = pathlib.Path(__file__).parent
 
-    _build_dir: str = tempfile.mkdtemp(prefix="pigen")
+    _build_dir: str | None = None
     build_dir: pathlib.Path | None = None
     keep_build_dir: bool = False
 
@@ -49,7 +49,7 @@ class Defaults:
     output: pathlib.Path | None = None
 
     _src_config: str = ""
-    src_config: Optional[pathlib.Path] = None
+    src_config: pathlib.Path | None = None
 
     IMG_NAME: str = "offspot-base"
     LOCALE_DEFAULT: str = "en_US.UTF-8"
@@ -75,12 +75,14 @@ class Defaults:
             .resolve()
             .with_suffix(".img")  # make sure we request filename ending in .img
         )
+        if self._build_dir is None:
+            self._build_dir = tempfile.mkdtemp(prefix="pigen")
         self.build_dir = pathlib.Path(self._build_dir).expanduser().resolve()
         if self._src_config:
             self.src_config = pathlib.Path(self._src_config).expanduser().resolve()
 
     @classmethod
-    def pigen_vars(cls) -> List[str]:
+    def pigen_vars(cls) -> list[str]:
         """list of our Default vars that are exported to pigen's config"""
         return list(
             filter(lambda item: item == item.upper(), cls.__dataclass_fields__.keys())
@@ -114,8 +116,9 @@ class Builder:
 
         # log (debug) actual config file
         config_path = self.conf.build_dir / "config"
-        with open(config_path, "r") as fh:
-            logger.debug(f"starting pi-gen build with {config_path}\n{fh.read()}")
+        logger.debug(
+            f"starting pi-gen build with {config_path}\n{config_path.read_text()}"
+        )
 
         self.build()
 
@@ -190,10 +193,9 @@ class Builder:
         logger.info("Writing config")
         with open(self.conf.build_dir / "config", "w") as fh:
             if self.conf.src_config:
-                with open(self.conf.src_config, "r") as src_fh:
-                    fh.write(f"# passed src_config from {self.conf.src_config}\n")
-                    fh.write(src_fh.read())
-                    fh.write("\n# end of passed config\n")
+                fh.write(f"# passed src_config from {self.conf.src_config}\n")
+                fh.write(self.conf.src_config.read_text())
+                fh.write("\n# end of passed config\n")
             for key in self.conf.pigen_vars():
                 value = getattr(self.conf, key)
                 if value is not None:
@@ -211,14 +213,14 @@ class Builder:
         logger.info("Updating packages list")
         packages, rm_packages = set(), set()
         fpath = self.conf.build_dir / "stage2" / "01-sys-tweaks" / "00-packages"
-        with open(fpath, "r") as fh:
+        with open(fpath) as fh:
             for line in fh.readlines():
                 for item in line.strip().split():
                     packages.add(item.strip())
 
         with open(self.conf.src_dir / "packages") as fh:
             for line in fh.readlines():
-                line = line.strip()
+                line = line.strip()  # noqa: PLW2901
                 if line and line[0] in ("+", "-"):
                     for item in line[1:].strip().split():
                         if line[0] == "+":
@@ -239,7 +241,7 @@ class Builder:
             )
             with open(rm_fpath, "w") as fh:
                 fh.write(
-                    "#!/bin/bash -e\napt-get remove --auto-remove -y "
+                    "#!/bin/bash -e\napt-get remove --auto-remove -y "  # noqa: ISC003
                     + f"{' '.join(rm_packages)}\n"
                 )
             rm_fpath.chmod(0o755)
@@ -268,27 +270,42 @@ class Builder:
                     "0",
                     "-6",
                     self.conf.output,
-                ]
+                ],
+                check=True,
             )
-        subprocess.run(["/usr/bin/env", "ls", "-lh", self.conf.output.parent])
+        subprocess.run(
+            ["/usr/bin/env", "ls", "-lh", self.conf.output.parent], check=True
+        )
 
     def build_nodocker(self) -> bool:
         logger.info("Starting build")
-        return subprocess.run(["./build.sh"], cwd=self.conf.build_dir).returncode == 0
+        return (
+            subprocess.run(
+                ["./build.sh"], cwd=self.conf.build_dir, check=False
+            ).returncode
+            == 0
+        )
 
     def build_docker(self) -> bool:
         logger.info("Starting build using docker")
         return (
-            subprocess.run(["./build-docker.sh"], cwd=self.conf.build_dir).returncode
+            subprocess.run(
+                ["./build-docker.sh"], cwd=self.conf.build_dir, check=False
+            ).returncode
             == 0
         )
 
     def cleanup(self):
         if not subprocess.run(
-            ["/usr/bin/env", "docker", "inspect", CONTAINER_NAME], capture_output=True
+            ["/usr/bin/env", "docker", "inspect", CONTAINER_NAME],
+            capture_output=True,
+            check=False,
         ).returncode:
             logger.debug(f"Removing existing container {CONTAINER_NAME}")
-            subprocess.run(["/usr/bin/env", "docker", "rm", "-v", "-f", CONTAINER_NAME])
+            subprocess.run(
+                ["/usr/bin/env", "docker", "rm", "-v", "-f", CONTAINER_NAME],
+                check=False,
+            )
 
         # remove build-dir (pigen clone)
         if self.conf.build_dir.exists() and not self.conf.keep_build_dir:
@@ -303,9 +320,9 @@ def main():
 
     parser.add_argument(
         "--output",
-        help="Output path and filename for image. "
-        "Defaults to <img-name>.img (--img-name ) in current working directory. "
-        "Normalized to use a `.img` suffix",
+        help="Output path and filename for image. "  # noqa: ISC003
+        + "Defaults to <img-name>.img (--img-name ) in current working directory. "
+        + "Normalized to use a `.img` suffix",
         dest="_output",
     )
 
@@ -329,8 +346,8 @@ def main():
         opt_name = name.lower().replace("_", "-")
         parser.add_argument(
             f"--{opt_name}",
-            help=f"`{name}` environ for pi-gen. "
-            f"Default: “{getattr(Defaults, name) or '-'}”",
+            help=f"`{name}` environ for pi-gen. "  # noqa: ISC003
+            + f"Default: “{getattr(Defaults, name) or '-'}”",
             default=getattr(Defaults, name),
             dest=name,
         )
@@ -344,9 +361,9 @@ def main():
 
     parser.add_argument(
         "--compress",
-        help="Compress output image using XZ at end of process. "
-        "Compressed image will be output filename appended with `.xz`. "
-        "Uncompressed image will be removed",
+        help="Compress output image using XZ at end of process. "  # noqa: ISC003
+        + "Compressed image will be output filename appended with `.xz`. "
+        + "Uncompressed image will be removed",
         default=Defaults.compress,
         dest="compress",
         action="store_true",
@@ -362,8 +379,8 @@ def main():
 
     parser.add_argument(
         "--config",
-        help="[dev] Use as base of for config file. All builder-exposed variables "
-        "will be appended to the file (and this overwrite values).",
+        help="[dev] Use as base of for config file. All builder-exposed variables "  # noqa: ISC003
+        + "will be appended to the file (and this overwrite values).",
         dest="_src_config",
     )
 
@@ -380,7 +397,7 @@ def main():
     except Exception as exc:
         logger.error(f"FAILED. An error occurred: {exc}")
         logger.exception(exc)
-        raise SystemExit(1)
+        raise SystemExit(1) from exc
     finally:
         builder.cleanup()
 
