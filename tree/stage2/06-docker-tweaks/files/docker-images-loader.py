@@ -29,15 +29,16 @@ for fpath in images_root.glob("*.tar"):
             logger.exception(exc)
             continue
         logger.info(f">> Loading {name}…")
-        dl = subprocess.run(["/usr/bin/env", engine, "load", "--input", fpath])
+        dl = subprocess.run(
+            ["/usr/bin/env", engine, "load", "--input", fpath], check=True
+        )
         if dl.returncode == 0:
             logger.info(f">> Successfuly loaded {name}. Removing {fpath.name}")
             try:
                 fpath.unlink()
             except Exception as exc:
                 logger.warning(f"Failed to remove tar file at {fpath}: {exc}")
-            finally:
-                continue
+            continue
         errors += 1
         logger.error(f"Unable to load {name} into docker")
 

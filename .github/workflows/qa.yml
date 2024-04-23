@@ -1,36 +1,34 @@
 name: QA
 
-on: push
-
-env:
-  # black default
-  MAX_LINE_LENGTH: 88
+on:
+  pull_request:
+  push:
+    branches:
+      - main
 
 jobs:
   check-qa:
     runs-on: ubuntu-22.04
+
     steps:
       - uses: actions/checkout@v3
-      - name: Set up Python ${{ matrix.python }}
+
+      - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: 3.11
+          python-version-file: pyproject.toml
           architecture: x64
 
+      - name: Install dependencies (and project)
+        run: |
+          pip install -U pip
+          pip install -e .[lint,scripts,check]
+
       - name: Check black formatting
-        run: |
-          pip install black==23.7.0
-          black --version
-          black --check .
+        run: inv lint-black
 
-      - name: Check flake8 linting
-        run: |
-          pip install flake8==6.1.0
-          flake8 --version
-          flake8 . --count --max-line-length=$MAX_LINE_LENGTH --statistics
+      - name: Check ruff
+        run: inv lint-ruff
 
-      - name: Check import order with isort
-        run: |
-          pip install isort==5.12.0
-          isort --version
-          isort --profile black --check .
+      - name: Check pyright
+        run: inv check-pyright
