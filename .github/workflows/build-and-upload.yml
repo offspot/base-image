@@ -106,11 +106,11 @@ jobs:
         if: ${{ env.IS_RELEASE }}
         run: |
           echo "Uploading image ${{ env.BASE_IMAGE_FILENAME_XZ }} & info to WebDAV..."
-          curl -u "${{ secrets.DRIVE_CREDENTIALS }}" -T "${{ env.BASE_IMAGE_FILENAME_XZ }}" -sw '%{http_code}' "https://drive.offspot.it/_webdav/base/${{ env.BASE_IMAGE_FILENAME_XZ }}"
-          curl -u "${{ secrets.DRIVE_CREDENTIALS }}" -T "${{ env.BASE_IMAGE_INFO_FILENAME }}" -sw '%{http_code}' "https://drive.offspot.it/_webdav/base/${{ env.BASE_IMAGE_INFO_FILENAME }}"
-          curl -u "${{ secrets.DRIVE_CREDENTIALS }}" -T "${{ env.BASE_IMAGE_FILENAME_MD5 }}" -sw '%{http_code}' "https://drive.offspot.it/_webdav/base/${{ env.BASE_IMAGE_FILENAME_MD5 }}"
-          curl -u "${{ secrets.DRIVE_CREDENTIALS }}" -T "${{ env.BASE_IMAGE_FILENAME_XZ_MD5 }}" -sw '%{http_code}' "https://drive.offspot.it/_webdav/base/${{ env.BASE_IMAGE_FILENAME_XZ_MD5 }}"
-          curl -u "${{ secrets.DRIVE_CREDENTIALS }}" -T "${{ env.BASE_IMAGE_FILENAME }}" -sw '%{http_code}' "https://drive.offspot.it/_webdav/base/${{ env.BASE_IMAGE_FILENAME }}"
+          curl -u "${{ secrets.DRIVE_CREDENTIALS }}" -T "${{ env.BASE_IMAGE_FILENAME_XZ }}" -sw '%{http_code}' "https://drive.offspot.it/base/${{ env.BASE_IMAGE_FILENAME_XZ }}"
+          curl -u "${{ secrets.DRIVE_CREDENTIALS }}" -T "${{ env.BASE_IMAGE_INFO_FILENAME }}" -sw '%{http_code}' "https://drive.offspot.it/base/${{ env.BASE_IMAGE_INFO_FILENAME }}"
+          curl -u "${{ secrets.DRIVE_CREDENTIALS }}" -T "${{ env.BASE_IMAGE_FILENAME_MD5 }}" -sw '%{http_code}' "https://drive.offspot.it/base/${{ env.BASE_IMAGE_FILENAME_MD5 }}"
+          curl -u "${{ secrets.DRIVE_CREDENTIALS }}" -T "${{ env.BASE_IMAGE_FILENAME_XZ_MD5 }}" -sw '%{http_code}' "https://drive.offspot.it/base/${{ env.BASE_IMAGE_FILENAME_XZ_MD5 }}"
+          curl -u "${{ secrets.DRIVE_CREDENTIALS }}" -T "${{ env.BASE_IMAGE_FILENAME }}" -sw '%{http_code}' "https://drive.offspot.it/base/${{ env.BASE_IMAGE_FILENAME }}"
           echo "### Artefacts" >> $GITHUB_STEP_SUMMARY
           echo "- [${{ env.BASE_IMAGE_FILENAME_XZ }}](https://drive.offspot.it/base/${{ env.BASE_IMAGE_FILENAME_XZ }})" >> $GITHUB_STEP_SUMMARY
           echo "- [${{ env.BASE_IMAGE_FILENAME }}](https://drive.offspot.it/base/${{ env.BASE_IMAGE_FILENAME }})" >> $GITHUB_STEP_SUMMARY
