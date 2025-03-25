@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.1] - 2025-03-25
+
+### Changed
+
+- Inter-services dependencies fix for network scenarios
+- Fixed systemd unit files permissions #69
+- Using offspot-config 2.5.3 (iptables-restore service detection fix)
+
 ## [1.3.0] - 2025-03-13
 
 ### Changed
