@@ -10,11 +10,11 @@
 +echo 0 > "${ROOTFS_DIR}/var/lib/systemd/rfkill/platform-fe300000.mmcnr:wlan"
 +
 +install -m 755 files/internet-check              "${ROOTFS_DIR}/usr/local/bin/"
-+install -m 755 files/internet-check.service      "${ROOTFS_DIR}/etc/systemd/system/"
++install -m 644 files/internet-check.service      "${ROOTFS_DIR}/etc/systemd/system/"
 +
 +# runtime config firewall persistence (ap)
 +mkdir -p ${ROOTFS_DIR}/etc/iptables
-+install -m 755 files/iptables-restore.service       "${ROOTFS_DIR}/etc/systemd/system/"
++install -m 644 files/iptables-restore.service       "${ROOTFS_DIR}/etc/systemd/system/"
 +
 +install -m 664 files/dhcpcd.conf       "${ROOTFS_DIR}/etc/"
 +

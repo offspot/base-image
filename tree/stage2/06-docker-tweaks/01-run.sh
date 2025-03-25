@@ -20,17 +20,17 @@ adduser $FIRST_USER_NAME balena-engine
 EOF
 
 # install balena service
-install -m 777 files/balena.service "${ROOTFS_DIR}/etc/systemd/system/"
-install -m 777 files/balena.socket "${ROOTFS_DIR}/etc/systemd/system/"
+install -m 644 files/balena.service "${ROOTFS_DIR}/etc/systemd/system/"
+install -m 644 files/balena.socket "${ROOTFS_DIR}/etc/systemd/system/"
 
 # install the image loading service
 install -m 755 files/docker-images-loader.py "${ROOTFS_DIR}/usr/sbin/"
-install -m 777 files/docker-images-loader.service "${ROOTFS_DIR}/etc/systemd/system/"
+install -m 644 files/docker-images-loader.service "${ROOTFS_DIR}/etc/systemd/system/"
 
 # install docker compose stub and service
 mkdir -p ${ROOTFS_DIR}/etc/docker
 install -m 755 files/compose.yml "${ROOTFS_DIR}/etc/docker/"
-install -m 777 files/docker-compose.service "${ROOTFS_DIR}/etc/systemd/system/"
+install -m 644 files/docker-compose.service "${ROOTFS_DIR}/etc/systemd/system/"
 
 on_chroot << EOF
 systemctl daemon-reload
