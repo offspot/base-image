@@ -1,12 +1,16 @@
 #!/usr/bin/env python3
 
-""" tests whether connected to Internet (UDP to CloudFlare DNS) or not """
+"""tests whether connected to Internet (UDP to CloudFlare DNS) or not"""
 
+import os
 import pathlib
 import socket
 import sys
+import time
 
 LOG_FILE = pathlib.Path("/var/run/internet")
+DEBUG = bool(os.getenv("DEBUG"))
+INTERVAL = int(os.getenv("INTERNET_CHECK_INTERVAL", "60"))
 
 
 def is_connected(host="1.1.1.1"):
@@ -14,26 +18,46 @@ def is_connected(host="1.1.1.1"):
         socket.create_connection((host, 53), timeout=8)
         return True
     except Exception:
-        pass
+        ...
     return False
 
 
-def main():
+def single_check():
     connected = is_connected()
     connected_str = "online" if connected else "offline"
-    print(connected_str)
+    print(connected_str, flush=True)
 
     LOG_FILE.parent.mkdir(parents=True, exist_ok=True)
+    # first run would fail reading non-existent file
     try:
-        with open(LOG_FILE, "r") as fh:
-            if fh.read().strip() == connected_str:
-                return
+        if LOG_FILE.read_text().strip() == connected_str:
+            return 0
     except Exception:
         ...
 
-    with open(LOG_FILE, "w") as fh:
-        fh.write(f"{connected_str}\n")
+    # we need to be able to update the file though otherwise its useless
+    LOG_FILE.write_text(f"{connected_str}\n")
+    return 0
+
+
+def check_forever():
+    while True:
+        single_check()
+        # sleep INTERVAL seconds by increment of 1s as to not block in SIGTERM
+        for _ in range(0, INTERVAL):
+            time.sleep(1)
+    return 0
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    func = (
+        check_forever
+        if len(sys.argv) >= 2 and sys.argv[1] == "forever"
+        else single_check
+    )
+    try:
+        sys.exit(func())
+    except Exception as exc:
+        if DEBUG:
+            print(exc, flush=True)
+        sys.exit(1)

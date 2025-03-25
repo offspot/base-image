@@ -1,9 +1,0 @@
-[Unit]
-Description=Internet connectivity checker
-
-[Timer]
-OnBootSec=1min
-OnUnitActiveSec=30
-
-[Install]
-WantedBy=timers.target

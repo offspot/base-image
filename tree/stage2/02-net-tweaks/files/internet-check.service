@@ -1,7 +1,7 @@
 [Unit]
 Description=Internet connectivity checker
-After=network-online.target
+After=network.target
 
 [Service]
-Type=oneshot
-ExecStart=/usr/local/bin/internet-check
+ExecStart=/usr/local/bin/internet-check forever
+StandardOutput=journal

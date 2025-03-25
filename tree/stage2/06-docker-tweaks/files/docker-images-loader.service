@@ -8,6 +8,7 @@ Type=oneshot
 ExecStart=/usr/sbin/docker-images-loader.py
 RemainAfterExit=true
 StandardOutput=journal
+StandardError=journal
 
 [Install]
 WantedBy=multi-user.target

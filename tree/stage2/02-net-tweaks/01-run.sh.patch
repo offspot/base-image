@@ -11,7 +11,6 @@
 +
 +install -m 755 files/internet-check              "${ROOTFS_DIR}/usr/local/bin/"
 +install -m 755 files/internet-check.service      "${ROOTFS_DIR}/etc/systemd/system/"
-+install -m 755 files/internet-check.timer        "${ROOTFS_DIR}/etc/systemd/system/"
 +
 +# runtime config firewall persistence (ap)
 +mkdir -p ${ROOTFS_DIR}/etc/iptables
@@ -24,6 +23,5 @@
 +systemctl enable dhcpcd.service
 +systemctl unmask hostapd
 +systemctl disable hostapd.service dnsmasq.service iptables-restore.service
-+systemctl enable internet-check.timer
 +EOF
 +
