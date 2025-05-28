@@ -76,7 +76,7 @@ fi
 mkdosfs -n bootfs -F "$FAT_SIZE" -s 4 -v "$BOOT_DEV" > /dev/null
 mkfs.ext4 -L rootfs -O "$ROOT_FEATURES" "$ROOT_DEV" > /dev/null
 # not using ROOT_FEATURES to allow fs above 2TiB (huge_file) and 4TiB (64b)
-mkfs.ext4 -L data "$DATA_DEV" > /dev/null
+mkfs.ext4 -T largefile -m 1 -L data "$DATA_DEV" > /dev/null
 
 mount -v "$ROOT_DEV" "${ROOTFS_DIR}" -t ext4
 mkdir -p "${ROOTFS_DIR}/boot/firmware"
