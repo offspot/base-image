@@ -1,7 +1,7 @@
 [Unit]
 Description=Offspot Runtime
 Requires=network.target internet-check.service
-After=network.target internet-check.service
+After=network.target internet-check.service balena.service
 
 [Service]
 Type=oneshot

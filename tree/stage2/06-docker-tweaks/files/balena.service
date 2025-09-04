@@ -1,7 +1,7 @@
 [Unit]
 Description=Docker Application Container Engine
 Documentation=https://docs.docker.com
-After=network.target balena.socket firewalld.service iptables-restore.service offspot-runtime.service
+After=network.target balena.socket firewalld.service iptables-restore.service
 Wants=network.target
 Requires=balena.socket
 

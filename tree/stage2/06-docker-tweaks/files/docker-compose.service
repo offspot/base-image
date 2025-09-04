@@ -1,7 +1,7 @@
 [Unit]
 Description=Docker compose service
 BindsTo=balena.service
-After=balena.service docker-images-loader.service offspot-runtime.service iptables-restore.service internet-check.service
+After=balena.service docker-images-loader.service iptables-restore.service internet-check.service
 
 [Service]
 ExecStart=/usr/local/bin/docker-compose -f /etc/docker/compose.yml up --remove-orphans

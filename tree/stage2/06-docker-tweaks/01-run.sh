@@ -37,5 +37,4 @@ systemctl daemon-reload
 systemctl enable balena.socket
 systemctl enable balena.service
 systemctl enable docker-images-loader.service
-systemctl enable docker-compose.service
 EOF
