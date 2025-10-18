@@ -176,11 +176,11 @@ if ! check_commands; then
 fi
 
 if main; then
-  whiptail --infobox "Resized data filesystem. Rebooting in 5 seconds..." 20 60
-  sleep 5
+  whiptail --infobox "Resized data filesystem. Rebooting in 2 seconds..." 20 60
+  sleep 2
 else
   whiptail --msgbox "Could not recreate data filesystem Rebooting...\n${FAIL_REASON}" 20 60
-  sleep 5
+  sleep 10
 fi
 
 reboot_pi
