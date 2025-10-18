@@ -9,10 +9,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Based on pi-gen `2025-10-01-raspios-trixie`
+- Using offspot-config 2.x.x
 - Data partition block-size now ~1Mib instead of 1KiB
 - Data partition reserved blocks for root to 1% instead of 5%
 - balena service to be started before offspot-runtime
 - docker-compose service not started automatically (started by offspot-runtime)
+
+### Removed
+
+- Support for armhf. It's a soft removal, we just don't test it anymore. Use at own risk
 
 ## [1.3.1] - 2025-03-25
 
