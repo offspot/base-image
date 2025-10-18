@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "builder"
-requires-python = ">=3.9,<3.13"
+requires-python = ">=3.13,<3.14"
 description = "Offspot Base Image Builder"
 readme = "README.md"
 dependencies = []
@@ -12,18 +12,17 @@ version = "1.0.0.dev0"
 
 [project.optional-dependencies]
 scripts = [
-  "invoke==2.2.0",
+  "invoke==2.2.1",
 ]
 lint = [
-  "black==24.4.0",
-  "ruff==0.4.1",
+  "ruff==0.14.0",
 ]
 check = [
-  "pyright==1.1.359",
+  "pyright==1.1.406",
 ]
 dev = [
-  "pre-commit==3.7.0",
-  "ipython==8.23.0",
+  "pre-commit==4.3.0",
+  "ipython==9.6.0",
   "builder[scripts]",
   "builder[lint]",
   "builder[check]",
