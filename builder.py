@@ -63,6 +63,7 @@ class Defaults:
     PUBKEY_SSH_FIRST_USER: str = ""
     PUBKEY_ONLY_SSH: str = "0"
     ENABLE_CLOUD_INIT: str = "0"
+    WPA_COUNTRY: str = "US"
     STAGE_LIST: str = "stage0 stage1 stage2"
 
     @property
