@@ -11,6 +11,10 @@
 + jq
 + tree
 
+# replace netplan with ifupdown
+- netplan.io
++ ifupdown
+
 # docker stack: disabled in favor of balena (stage2/06-docker-tweaks)
 # docker-ce docker-ce-cli containerd.io docker-compose-plugin
 
