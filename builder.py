@@ -30,9 +30,9 @@ def run(*args, **kwargs):
 class Defaults:
     supported_archs = ("armhf", "arm64")
     # using supported_archs indexes
-    pigen_versions = (  # ~ 2023-05-03-raspios-buster
-        "2024-03-15-raspios-bookworm",
-        "2024-03-15-raspios-bookworm-arm64",
+    pigen_versions = (
+        "2025-10-01-raspios-trixie-armhf",
+        "2025-10-01-raspios-trixie-arm64",
     )
     arch: str = "arm64"
     is_macos: bool = platform.system() == "Darwin"
