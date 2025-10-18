@@ -1,12 +1,9 @@
-*** tree.orig/stage1/00-boot-files/files/config.txt	2023-03-08 08:33:49
---- tree/stage1/00-boot-files/files/config.txt	2023-03-08 08:36:04
-***************
-*** 1,6 ****
---- 1,7 ----
-  # For more options and information see
-  # http://rptl.io/configtxt
-  # Some settings may impact device functionality. See link above for details
-+ dtoverlay=i2c-rtc,pcf2127
-  
-  # uncomment if you get no picture on HDMI for a default "safe" mode
-  #hdmi_safe=1
+diff --git i/stage1/00-boot-files/files/config.txt w/stage1/00-boot-files/files/config.txt
+index fecd26f..0ea13f8 100644
+--- i/stage1/00-boot-files/files/config.txt
++++ w/stage1/00-boot-files/files/config.txt
+@@ -49,3 +49,4 @@ otg_mode=1
+ dtoverlay=dwc2,dr_mode=host
+
+ [all]
++dtoverlay=i2c-rtc,pcf2127
