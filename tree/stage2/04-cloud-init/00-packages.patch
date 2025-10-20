@@ -1,0 +1,7 @@
+diff --git i/stage2/04-cloud-init/00-packages w/stage2/04-cloud-init/00-packages
+index db064e6..8b13789 100644
+--- i/stage2/04-cloud-init/00-packages
++++ w/stage2/04-cloud-init/00-packages
+@@ -1 +1 @@
+-cloud-init
++

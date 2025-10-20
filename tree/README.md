@@ -8,4 +8,7 @@ pi-gen tree replacements
 
 ```sh
 diff -u path/to/original path/to/updated > tree/path/to/original.patch
+
+# or, if working from a git copy of the original tree (I use tree-arm54.orig)
+git diff --no-prefix path/to/original > ../tree/path/to/original.patch
 ```

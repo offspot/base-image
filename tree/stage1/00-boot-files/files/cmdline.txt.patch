@@ -1,0 +1,7 @@
+diff --git stage1/00-boot-files/files/cmdline.txt stage1/00-boot-files/files/cmdline.txt
+index 71b90ff..b024fc9 100644
+--- stage1/00-boot-files/files/cmdline.txt
++++ stage1/00-boot-files/files/cmdline.txt
+@@ -1 +1 @@
+-console=serial0,115200 console=tty1 root=ROOTDEV rootfstype=ext4 fsck.repair=yes rootwait resize
++console=serial0,115200 console=tty1 root=ROOTDEV rootfstype=ext4 fsck.repair=yes rootwait systemd.restore_state=0 rfkill.default_state=1 quiet init=/usr/sbin/offspot_bi_init_resize.sh

@@ -1,17 +1,27 @@
---- tree.orig/stage2/02-net-tweaks/01-run.sh	2022-05-31 10:21:03.000000000 +0000
-+++ tree/stage2/02-net-tweaks/01-run.sh	2022-09-14 15:55:11.000000000 +0000
-@@ -35,3 +35,26 @@
-     echo 1 > "${ROOTFS_DIR}/var/lib/systemd/rfkill/platform-3f300000.mmcnr:wlan"
-     echo 1 > "${ROOTFS_DIR}/var/lib/systemd/rfkill/platform-fe300000.mmcnr:wlan"
+diff --git stage2/02-net-tweaks/01-run.sh stage2/02-net-tweaks/01-run.sh
+index 1f91095..47dcff9 100755
+--- stage2/02-net-tweaks/01-run.sh
++++ stage2/02-net-tweaks/01-run.sh
+@@ -11,6 +11,7 @@ for addr in 107d50c000.serial 3f215040.serial 20215040.serial fe215040.serial so
+ 	echo 0 > "${ROOTFS_DIR}/var/lib/systemd/rfkill/platform-${addr}:bluetooth"
+ done
+ 
++# base-image sets this so we should always enter this
+ if [ -v WPA_COUNTRY ]; then
+ 	on_chroot <<- EOF
+ 		SUDO_USER="${FIRST_USER_NAME}" raspi-config nonint do_wifi_country "${WPA_COUNTRY}"
+@@ -22,3 +23,24 @@ elif [ -d "${ROOTFS_DIR}/var/lib/NetworkManager" ]; then
+ 		WirelessEnabled=false
+ 	EOF
  fi
 +
-+# unblock WiFi
-+echo 0 > "${ROOTFS_DIR}/var/lib/systemd/rfkill/platform-3f300000.mmcnr:wlan"
-+echo 0 > "${ROOTFS_DIR}/var/lib/systemd/rfkill/platform-fe300000.mmcnr:wlan"
++# unblock WiFi anyway (should have been done by raspi-config above though)
++for addr in 3f300000.mmcnr fe300000.mmcnr 1001100000.mmc; do
++    echo 0 > "${ROOTFS_DIR}/var/lib/systemd/rfkill/platform-${addr}:wlan"
++done
 +
 +install -m 755 files/internet-check              "${ROOTFS_DIR}/usr/local/bin/"
 +install -m 644 files/internet-check.service      "${ROOTFS_DIR}/etc/systemd/system/"
-+
 +
 +# runtime config firewall persistence (ap)
 +mkdir -p ${ROOTFS_DIR}/etc/iptables
@@ -24,6 +34,4 @@
 +systemctl enable dhcpcd.service
 +systemctl unmask hostapd
 +systemctl disable hostapd.service dnsmasq.service iptables-restore.service
-+
 +EOF
-+

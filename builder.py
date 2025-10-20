@@ -30,9 +30,9 @@ def run(*args, **kwargs):
 class Defaults:
     supported_archs = ("armhf", "arm64")
     # using supported_archs indexes
-    pigen_versions = (  # ~ 2023-05-03-raspios-buster
-        "2024-03-15-raspios-bookworm",
-        "2024-03-15-raspios-bookworm-arm64",
+    pigen_versions = (
+        "2025-10-01-raspios-trixie-armhf",
+        "2025-10-01-raspios-trixie-arm64",
     )
     arch: str = "arm64"
     is_macos: bool = platform.system() == "Darwin"
@@ -62,6 +62,8 @@ class Defaults:
     ENABLE_SSH: str = "0"
     PUBKEY_SSH_FIRST_USER: str = ""
     PUBKEY_ONLY_SSH: str = "0"
+    ENABLE_CLOUD_INIT: str = "0"
+    WPA_COUNTRY: str = "US"
     STAGE_LIST: str = "stage0 stage1 stage2"
 
     @property
@@ -98,6 +100,10 @@ class Builder:
     def __init__(self, conf):
         self.conf = conf
 
+        if self.conf.arch == "armhf":
+            message = f"WARN: arch {self.conf.arch} is not tested. Use at own risk"
+            print(f"\033[91m{message}\033[0m", flush=True)  # noqa: T201
+
     def run(self):
         # stop builder right away if target file already exists
         if self.conf.output.exists():
@@ -120,7 +126,7 @@ class Builder:
             f"starting pi-gen build with {config_path}\n{config_path.read_text()}"
         )
 
-        self.build()
+        return self.build()
 
     def download_pigen(self):
         """clone requested version of Pi-gen"""

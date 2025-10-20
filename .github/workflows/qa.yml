@@ -24,9 +24,6 @@ jobs:
           pip install -U pip
           pip install -e .[lint,scripts,check]
 
-      - name: Check black formatting
-        run: inv lint-black
-
       - name: Check ruff
         run: inv lint-ruff
 

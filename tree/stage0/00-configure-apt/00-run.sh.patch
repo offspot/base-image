@@ -1,25 +1,24 @@
---- tree.orig/stage0/00-configure-apt/00-run.sh	2022-05-31 10:21:03.000000000 +0000
-+++ tree/stage0/00-configure-apt/00-run.sh	2022-07-11 17:18:28.000000000 +0000
-@@ -2,8 +2,12 @@
- 
- install -m 644 files/sources.list "${ROOTFS_DIR}/etc/apt/"
- install -m 644 files/raspi.list "${ROOTFS_DIR}/etc/apt/sources.list.d/"
-+install -m 644 files/docker.list "${ROOTFS_DIR}/etc/apt/sources.list.d/"
- sed -i "s/RELEASE/${RELEASE}/g" "${ROOTFS_DIR}/etc/apt/sources.list"
- sed -i "s/RELEASE/${RELEASE}/g" "${ROOTFS_DIR}/etc/apt/sources.list.d/raspi.list"
-+sed -i "s/RELEASE/${RELEASE}/g" "${ROOTFS_DIR}/etc/apt/sources.list.d/docker.list"
-+sed -i "s/APT_ARCH/$(dpkg --print-architecture)/g" "${ROOTFS_DIR}/etc/apt/sources.list.d/docker.list"
-+cat "${ROOTFS_DIR}/etc/apt/sources.list.d/docker.list"
- 
+diff --git stage0/00-configure-apt/00-run.sh stage0/00-configure-apt/00-run.sh
+index f3e95b0..3a51fce 100755
+--- stage0/00-configure-apt/00-run.sh
++++ stage0/00-configure-apt/00-run.sh
+@@ -3,8 +3,11 @@
+ true > "${ROOTFS_DIR}/etc/apt/sources.list"
+ install -m 644 files/debian.sources "${ROOTFS_DIR}/etc/apt/sources.list.d/"
+ install -m 644 files/raspi.sources "${ROOTFS_DIR}/etc/apt/sources.list.d/"
++install -m 644 files/docker.sources "${ROOTFS_DIR}/etc/apt/sources.list.d/"
+ sed -i "s/RELEASE/${RELEASE}/g" "${ROOTFS_DIR}/etc/apt/sources.list.d/debian.sources"
+ sed -i "s/RELEASE/${RELEASE}/g" "${ROOTFS_DIR}/etc/apt/sources.list.d/raspi.sources"
++sed -i "s/RELEASE/${RELEASE}/g" "${ROOTFS_DIR}/etc/apt/sources.list.d/docker.sources"
++
+
  if [ -n "$APT_PROXY" ]; then
  	install -m 644 files/51cache "${ROOTFS_DIR}/etc/apt/apt.conf.d/51cache"
-@@ -12,6 +16,8 @@
- 	rm -f "${ROOTFS_DIR}/etc/apt/apt.conf.d/51cache"
+@@ -20,6 +23,7 @@ else
+ 	rm -f "${ROOTFS_DIR}/etc/apt/sources.list.d/00-temp.list"
  fi
- 
-+mkdir -p "${ROOTFS_DIR}/etc/apt/keyrings"
-+curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor > "${ROOTFS_DIR}/etc/apt/keyrings/docker.gpg"
- cat files/raspberrypi.gpg.key | gpg --dearmor > "${STAGE_WORK_DIR}/raspberrypi-archive-stable.gpg"
- install -m 644 "${STAGE_WORK_DIR}/raspberrypi-archive-stable.gpg" "${ROOTFS_DIR}/etc/apt/trusted.gpg.d/"
- on_chroot << EOF
- dpkg --add-architecture arm64
+
++install -m 644 files/docker-keyring.pgp "${ROOTFS_DIR}/usr/share/keyrings/"
+ install -m 644 files/raspberrypi-archive-keyring.pgp "${ROOTFS_DIR}/usr/share/keyrings/"
+ on_chroot <<- \EOF
+ 	ARCH="$(dpkg --print-architecture)"
