@@ -100,6 +100,10 @@ class Builder:
     def __init__(self, conf):
         self.conf = conf
 
+        if self.conf.arch == "armhf":
+            message = f"WARN: arch {self.conf.arch} is not tested. Use at own risk"
+            print(f"\033[91m{message}\033[0m", flush=True)  # noqa: T201
+
     def run(self):
         # stop builder right away if target file already exists
         if self.conf.output.exists():
