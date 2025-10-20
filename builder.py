@@ -126,7 +126,7 @@ class Builder:
             f"starting pi-gen build with {config_path}\n{config_path.read_text()}"
         )
 
-        self.build()
+        return self.build()
 
     def download_pigen(self):
         """clone requested version of Pi-gen"""
