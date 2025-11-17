@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Added new Host bridge service for use with Admin UI
+
 ### Changed
 
 - Based on pi-gen `2025-10-01-raspios-trixie`

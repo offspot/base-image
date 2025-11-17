@@ -1,0 +1,19 @@
+[Unit]
+Description=Mekhenet Host/Admin bridge
+Requires=network.target internet-check.service
+After=network.target internet-check.service
+
+[Service]
+ExecStart=/usr/local/mekhenet-python/bin/uvicorn --uds /run/offspot/mekhenet.sock --app-dir /usr/local/mekhenet-python/lib/python3.13/site-packages/ "mekhenet:app"
+
+RuntimeDirectory=offspot
+Type=idle
+Restart=always
+TimeoutStartSec=10
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=docker-compose.service multi-user.target
+RequiredBy=docker-compose.service
