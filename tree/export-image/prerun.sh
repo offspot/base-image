@@ -20,7 +20,7 @@ ALIGN="$((8 * 1024 * 1024))"
 # some overhead (since actual space usage is usually rounded up to the
 # filesystem block size) and gives some free space on the resulting
 # image.
-ROOT_MARGIN="$(echo "($ROOT_SIZE * 0.2 + 200 * 1024 * 1024) / 1" | bc)"
+ROOT_MARGIN="$(echo "($ROOT_SIZE * 0.2 + 1024 * 1024 * 1024) / 1" | bc)"
 # disable data margin as it will eventually be recreated to fit device size
 DATA_MARGIN="0"
 
