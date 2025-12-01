@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Based on pi-gen `2025-10-01-raspios-trixie`
-- Using offspot-config 2.x.x
+- Using offspot-config 2.8.0
 - Data partition block-size now ~1Mib instead of 1KiB
 - Data partition reserved blocks for root to 1% instead of 5%
 - balena service to be started before offspot-runtime
