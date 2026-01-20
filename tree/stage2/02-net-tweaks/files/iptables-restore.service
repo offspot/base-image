@@ -5,7 +5,7 @@ PartOf=offspot-runtime.service
 [Service]
 Type=oneshot
 RemainAfterExit=yes
-ExecStart=/usr/bin/find /etc/iptables/ -name '*.rules' -exec /sbin/iptables-restore {} \;
+ExecStart=/usr/bin/find /etc/iptables/ -name '*.rules' -exec /sbin/iptables-restore --noflush {} \;
 
 [Install]
 WantedBy=multi-user.target
