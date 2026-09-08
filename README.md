@@ -28,7 +28,7 @@ Requirements: **docker**, **python3**. It is possible to build the image without
 
 ## Testing Images
 
-Releases are available from https://drive.offspot.it/base/. Test builds are uploades to S3. Links are available in the run's details.
+Releases are available from https://drive.hotspot.kiwix.org/base/. Test builds are uploades to S3. Links are available in the run's details.
 
 Regular tests can be done via [dockerpi](/lukechilds/dockerpi)
 
