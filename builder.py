@@ -31,8 +31,8 @@ class Defaults:
     supported_archs = ("armhf", "arm64")
     # using supported_archs indexes
     pigen_versions = (
-        "2025-10-01-raspios-trixie-armhf",
-        "2025-10-01-raspios-trixie-arm64",
+        "2026-10-06-raspios-trixie-armhf",
+        "2026-10-06-raspios-trixie-arm64",
     )
     arch: str = "arm64"
     is_macos: bool = platform.system() == "Darwin"
@@ -63,6 +63,7 @@ class Defaults:
     PUBKEY_SSH_FIRST_USER: str = ""
     PUBKEY_ONLY_SSH: str = "0"
     ENABLE_CLOUD_INIT: str = "0"
+    PASSWORDLESS_SUDO: str = "1"
     WPA_COUNTRY: str = "US"
     STAGE_LIST: str = "stage0 stage1 stage2"
 

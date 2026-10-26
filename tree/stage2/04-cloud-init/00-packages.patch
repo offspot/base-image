@@ -1,7 +1,6 @@
-diff --git i/stage2/04-cloud-init/00-packages w/stage2/04-cloud-init/00-packages
-index db064e6..8b13789 100644
---- i/stage2/04-cloud-init/00-packages
-+++ w/stage2/04-cloud-init/00-packages
-@@ -1 +1 @@
--cloud-init
+*** tree-arm64.orig/stage2/04-cloud-init/00-packages	2026-10-26 15:12:57
+--- tree/stage2/04-cloud-init/00-packages	2026-10-26 15:11:44
+***************
+*** 0 ****
+--- 1 ----
 +

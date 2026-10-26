@@ -1,9 +1,11 @@
+:100644 100644 8180b3a 0000000 M	stage1/00-boot-files/files/config.txt
+
 diff --git i/stage1/00-boot-files/files/config.txt w/stage1/00-boot-files/files/config.txt
-index fecd26f..0ea13f8 100644
+index 8180b3a..365fdf8 100644
 --- i/stage1/00-boot-files/files/config.txt
 +++ w/stage1/00-boot-files/files/config.txt
-@@ -49,3 +49,4 @@ otg_mode=1
- dtoverlay=dwc2,dr_mode=host
-
+@@ -52,3 +52,4 @@ dtoverlay=dwc2,dr_mode=host
+ dtoverlay=nospi10
+ 
  [all]
 +dtoverlay=i2c-rtc,pcf2127
