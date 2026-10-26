@@ -109,6 +109,6 @@ touch "${ROOTFS_DIR}/data/master_fs"
 # create images placeholder for docker
 mkdir -p "${ROOTFS_DIR}/data/images"
 # add base httpd server allowing docker stack tests
-wget -O "${ROOTFS_DIR}/data/images/base-httpd-1.0.tar" https://drive.offspot.it/base/base-httpd-1.0.tar
+wget -O "${ROOTFS_DIR}/data/images/base-httpd-1.0.tar" https://drive.hotspot.kiwix.org/base/base-httpd-1.0.tar
 
 rsync -rtx "${EXPORT_ROOTFS_DIR}/boot/firmware/" "${ROOTFS_DIR}/boot/firmware/"
