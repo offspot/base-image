@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 # add all optional WiFi firmwares
-FIRMWARES_URL=https://drive.offspot.it/wifi-firmwares
+FIRMWARES_URL=https://drive.hotspot.kiwix.org/wifi-firmwares
 FIRMWARES_DIR="${ROOTFS_DIR}/lib/firmware/cypress/"
 curl -sL --remote-name --create-dirs --output-dir "${FIRMWARES_DIR}" "${FIRMWARES_URL}/brcmfmac43455-sdio.bin_2021-11-30_minimal"                    # brcm43455    supports-19_2021-11-30
 curl -sL --remote-name --create-dirs --output-dir "${FIRMWARES_DIR}" "${FIRMWARES_URL}/brcmfmac43455-sdio.bin_2021-10-05_3rd-trial-minimal"          # brcm43455    supports-24_2021-10-05_noap+sta
