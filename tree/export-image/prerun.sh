@@ -67,6 +67,7 @@ for FEATURE in "${DISABLE_FEATURES[@]}"; do
 	if grep -q "$FEATURE" /etc/mke2fs.conf; then
 		ROOT_FEATURES="^$FEATURE,$ROOT_FEATURES"
 	fi
+done
 
 if [ "$BOOT_PART_SIZE" -lt 134742016 ]; then
 	FAT_SIZE=16
