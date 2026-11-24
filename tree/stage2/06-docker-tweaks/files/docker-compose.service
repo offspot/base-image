@@ -4,6 +4,8 @@ BindsTo=balena.service
 After=balena.service docker-images-loader.service iptables-restore.service internet-check.service
 
 [Service]
+ExecCondition=/bin/systemctl is-active --quiet docker-images-loader.service
+ExecCondition=/bin/sh -c 'for f in /data/images/*.tar; do [ -e "$f" ] && exit 1; done; exit 0'
 ExecStart=/usr/local/bin/docker-compose -f /etc/docker/compose.yml up --remove-orphans
 ExecStop=/usr/local/bin/docker-compose -f /etc/docker/compose.yml down
 
